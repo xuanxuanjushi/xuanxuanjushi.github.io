@@ -361,8 +361,11 @@
 
     var qr = c.wechatQr
       ? '<div class="qr-box"><img src="' + esc(pre + c.wechatQr) + '" alt="' + esc(c.wechatLabel || '微信二维码') + '"' +
-          ' title="占位二维码（含姓名/职位/公司/电话），替换 assets/img/wechat-qr.png 即可换成自己的微信码"></div>' +
-        '<span class="qr-label">' + esc(c.wechatLabel || '微信扫码') + '</span>'
+          ' title="替换 assets/img/wechat-qr.png 即可换成自己的微信码"></div>' +
+        '<span class="qr-label">' + esc(c.wechatLabel || '微信扫码') + '</span>' +
+        // 手机端竖排会把二维码单独推到下一行、右边空着，这里补一段文字把整行填满
+        '<div class="qr-text"><b>' + esc(c.wechatLabel || '微信扫码') + '添加</b>' +
+          '<span>' + (c.wechatId ? '微信号 ' + esc(c.wechatId) : '点击二维码查看大图') + '</span></div>'
       : '';
 
     var html = '' +

@@ -1194,6 +1194,9 @@ body.side-collapsed .side-inner { display: none; }
   opacity: .7;
 }
 
+/* 桌面端「微信号」已单独成行，这里不重复 */
+.qr-text { display: none; }
+
 .foot-bar {
   display: flex;
   align-items: center;
@@ -2154,7 +2157,31 @@ body.side-collapsed .side-inner { display: none; }
   .hero-deco { display: none; }
   .portrait { width: 148px; }
   .about-stats { grid-template-columns: 1fr 1fr; gap: 16px 12px; }
-  .contact-qr { grid-column: 1 / -1; justify-self: start; flex-direction: row; align-items: center; gap: 10px; }
+  /* 手机端二维码不再孤立在左边：整行铺开，左图右文，右侧不留空 */
+  .contact-qr {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-top: 2px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .contact-qr .qr-label { display: none; }
+  .contact-qr .qr-box img { width: 46px; height: 46px; }
+  .qr-text { display: block; min-width: 0; }
+  .qr-text b { display: block; font-size: .78rem; font-weight: 600; color: var(--ink-2); }
+  .qr-text span {
+    display: block;
+    margin-top: 2px;
+    font-family: var(--mono);
+    font-size: .68rem;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .avatar { width: 52px; height: 52px; font-size: 1.15rem; }
   .ident-name { font-size: 1.12rem; }
   .qr-box img { width: 52px; height: 52px; }
