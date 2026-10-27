@@ -64,7 +64,7 @@ contact: {
   avatar: '',                                 // 填 'assets/img/avatar.jpg' 就换成真头像，留空用姓名首字
   title: '高级设计师',
   company: '深圳市智领未来电子科技有限公司',
-  phone: '15873329367',
+  phone: '19114719734',
   wechatQr: 'assets/img/wechat-qr.png',       // 换成自己的微信二维码截图即可
   github: 'xuanxuanjushi'
 }

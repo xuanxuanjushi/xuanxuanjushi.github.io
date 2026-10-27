@@ -20,8 +20,8 @@ window.SITE_DATA = {
       name: '覃露雨',
       title: '高级设计师',
       company: '深圳市智领未来电子科技有限公司',
-      phone: '15873329367',
-      phoneLabel: '158 7332 9367',
+      phone: '19114719734',
+      phoneLabel: '191 1471 9734',
       wechatId: 'Congratulate-5',                        // 微信号（直接展示，扫不出码也能加）
       wechatNick: 'rainrainrain',
       wechatQr: 'assets/img/wechat-qr.png',              // 二维码图：换成微信「我的二维码」截图即可
