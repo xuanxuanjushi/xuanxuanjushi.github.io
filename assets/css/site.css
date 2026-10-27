@@ -1179,12 +1179,16 @@ body.side-collapsed .side-inner { display: none; }
 }
 
 .qr-box {
+  display: block;
   background: #fff;
   padding: 5px;
   border-radius: 6px;
   border: 1px solid var(--line);
+  cursor: zoom-in;
+  transition: border-color .15s, box-shadow .15s;
 }
-.qr-box img { width: 52px; height: 52px; display: block; image-rendering: pixelated; }
+.qr-box:hover { border-color: var(--accent-line); box-shadow: 0 0 0 3px var(--accent-soft); }
+.qr-box img { width: 84px; height: 84px; display: block; image-rendering: pixelated; }
 
 .qr-label {
   font-family: var(--mono);
@@ -2169,7 +2173,7 @@ body.side-collapsed .side-inner { display: none; }
     border-top: 1px dashed var(--line);
   }
   .contact-qr .qr-label { display: none; }
-  .contact-qr .qr-box img { width: 46px; height: 46px; }
+  .contact-qr .qr-box img { width: 64px; height: 64px; }
   .qr-text { display: block; min-width: 0; }
   .qr-text b { display: block; font-size: .78rem; font-weight: 600; color: var(--ink-2); }
   .qr-text span {

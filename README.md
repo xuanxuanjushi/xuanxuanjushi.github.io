@@ -65,13 +65,13 @@ contact: {
   title: '高级设计师',
   company: '深圳市智领未来电子科技有限公司',
   phone: '19114719734',
-  wechatQr: 'assets/img/wechat-qr.png',       // 换成自己的微信二维码截图即可
+  wechatQr: 'assets/img/wechat-qr.png',       // 微信「我的二维码」，换码只需覆盖这张图
   github: 'xuanxuanjushi'
 }
 ```
 
-> `assets/img/wechat-qr.png` 目前是**占位码**：内容是含姓名/职位/公司/电话的 vCard，扫出来能存联系人。
-> 换成真微信码只需覆盖这张图，代码不用动。
+`assets/img/wechat-qr.png` 现在就是**真实微信二维码**（扫出来直接加好友）。
+换码时覆盖这张同名图片即可，代码与布局都不用动。
 
 详情页的「点击下载」读 `项目.download`，为空时回落到 `site.downloadDefault`：
 

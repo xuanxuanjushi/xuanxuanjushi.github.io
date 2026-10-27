@@ -24,7 +24,7 @@ window.SITE_DATA = {
       phoneLabel: '191 1471 9734',
       wechatId: 'Congratulate-5',                        // 微信号（直接展示，扫不出码也能加）
       wechatNick: 'rainrainrain',
-      wechatQr: 'assets/img/wechat-qr.png',              // 二维码图：换成微信「我的二维码」截图即可
+      wechatQr: 'assets/img/wechat-qr.png',              // 微信「我的二维码」（400×400）
       wechatLabel: '微信扫码',
       email: '',                                         // 填了就出现邮箱入口
       douyin: 'qinliyu',                                 // 抖音号（页脚展示，点击复制）

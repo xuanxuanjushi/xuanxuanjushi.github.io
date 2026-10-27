@@ -362,8 +362,8 @@
     }
 
     var qr = c.wechatQr
-      ? '<div class="qr-box"><img src="' + esc(pre + c.wechatQr) + '" alt="' + esc(c.wechatLabel || '微信二维码') + '"' +
-          ' title="替换 assets/img/wechat-qr.png 即可换成自己的微信码"></div>' +
+      ? '<a class="qr-box" href="' + esc(pre + c.wechatQr) + '" target="_blank" rel="noopener" title="点击查看大图">' +
+          '<img src="' + esc(pre + c.wechatQr) + '" alt="' + esc(c.wechatLabel || '微信二维码') + '"></a>' +
         '<span class="qr-label">' + esc(c.wechatLabel || '微信扫码') + '</span>' +
         // 手机端竖排会把二维码单独推到下一行、右边空着，这里补一段文字把整行填满
         '<div class="qr-text"><b>' + esc(c.wechatLabel || '微信扫码') + '添加</b>' +
