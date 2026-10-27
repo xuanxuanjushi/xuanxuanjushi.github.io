@@ -1200,12 +1200,32 @@ body.side-collapsed .side-inner { display: none; }
 /* 10.5 个人简介页 ------------------------------------------------------- */
 /* 首屏：左肖像 / 右简介，底部一条数据带（参考作品集站的 split-screen 版式） */
 .about-hero {
+  position: relative;
   display: grid;
   grid-template-columns: 232px minmax(0, 1fr);
   gap: 34px;
   align-items: start;
   padding: 30px 0 8px;
 }
+
+/* 右侧装饰：粗细不等的酸性斜线，压在内容之下，不参与交互 */
+.hero-deco {
+  position: absolute;
+  top: 4px;
+  right: -6px;
+  width: 232px;
+  height: 268px;
+  color: var(--accent);
+  opacity: .5;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-deco svg { width: 100%; height: 100%; }
+
+.about-hero > .portrait,
+.about-hero > .about-id,
+.about-hero > .about-stats { position: relative; z-index: 1; }
 
 .portrait {
   position: relative;
@@ -2103,6 +2123,7 @@ body.side-collapsed .side-inner { display: none; }
   .article-side { order: 2; }
   .article-head h1 { font-size: 1.4rem; }
   .about-hero { grid-template-columns: 1fr; gap: 18px; padding-top: 20px; }
+  .hero-deco { display: none; }
   .portrait { width: 148px; }
   .about-stats { grid-template-columns: 1fr 1fr; gap: 16px 12px; }
   .contact-qr { grid-column: 1 / -1; justify-self: start; flex-direction: row; align-items: center; gap: 10px; }

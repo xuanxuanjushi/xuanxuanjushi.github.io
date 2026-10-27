@@ -44,8 +44,22 @@
         App.esc(String((A.updated || '2026.10')).replace('-', '.')) + '</span></div>' + stats;
     }
 
+    // 右侧装饰：几根粗细不同的酸性斜线 + 两个方块节点，只做层次不承载信息
+    var deco =
+      '<div class="hero-deco" aria-hidden="true">' +
+        '<svg viewBox="0 0 240 280" fill="none" preserveAspectRatio="xMidYMid meet">' +
+          '<path d="M18 52 226 236" stroke="currentColor" stroke-width="1" opacity=".35"/>' +
+          '<path d="M52 34 240 202" stroke="currentColor" stroke-width="2.5" opacity=".55"/>' +
+          '<path d="M8 120 150 250" stroke="currentColor" stroke-width="7" opacity=".85"/>' +
+          '<path d="M170 16v46" stroke="currentColor" stroke-width="1" opacity=".3"/>' +
+          '<path d="M0 232h84" stroke="currentColor" stroke-width="1" opacity=".25"/>' +
+          '<rect x="164" y="120" width="6" height="6" fill="currentColor" opacity=".9"/>' +
+          '<rect x="86" y="196" width="4" height="4" fill="currentColor" opacity=".5"/>' +
+        '</svg>' +
+      '</div>';
+
     el.hero.innerHTML =
-      photo +
+      photo + deco +
       '<div class="about-id">' +
         '<span class="mono about-eyebrow">Visual Designer · ' + App.esc(A.enName || '') + '</span>' +
         '<h1>' + App.esc(A.name) + '</h1>' +
