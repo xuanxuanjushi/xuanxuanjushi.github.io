@@ -9,7 +9,6 @@
   var App = window.App;
 
   var el = {
-    crumbs: document.getElementById('crumbs'),
     title: document.getElementById('title'),
     subtitle: document.getElementById('subtitle'),
     meta: document.getElementById('meta'),
@@ -27,10 +26,11 @@
   }
 
   function renderCrumbs(p) {
-    el.crumbs.innerHTML =
-      '<a href="index.html">首页</a><span class="sep">/</span>' +
-      '<a href="index.html?cat=' + encodeURIComponent(p.cat) + '">' + App.esc(App.catName(p.cat)) + '</a>' +
-      '<span class="sep">/</span><span class="cur">' + App.esc(p.title) + '</span>';
+    App.setCrumbs([
+      { label: '首页', href: 'index.html' },
+      { label: App.catName(p.cat), href: 'index.html?cat=' + encodeURIComponent(p.cat) },
+      { label: p.title }
+    ]);
   }
 
   function renderHead(p) {
@@ -87,7 +87,10 @@
       '<div class="spec-grid">' +
         spec('user', '适用人群', '设计师、内容创作者、需要快速出图或出片的个人与团队。') +
         spec('box', '包含内容', App.esc(p.title) + ' 工程文件、素材包、使用说明 PDF。') +
-        spec('monitor', '运行环境', p.cat === 'ai' ? 'Chrome 118+ / Edge 最新版；本地服务需 Node 18+。' : 'Windows 10+ / macOS 12+；对应设计软件 2021 以上版本。') +
+        spec('monitor', '运行环境',
+          p.cat === 'ai' ? 'Chrome 118+ / Edge 最新版；本地服务需 Node 18+。'
+          : p.cat === 'sites' ? '任意现代浏览器打开即可，无需安装。'
+          : 'Windows 10+ / macOS 12+；对应设计软件 2021 以上版本。') +
         spec('info', '注意事项', '包内字体为开源字体；商用前请阅读「授权与使用」一节。') +
       '</div>';
 
@@ -134,22 +137,26 @@
     var isFree = !!p.free;
     var wasPrice = isFree ? '' : Math.round((p.price || 0) * 1.35);
     var fav = App.isFav(p.id);
+    // 下载地址：资源自身 > 站点兜底（都可放网盘 / Release / CDN 任意链接）
+    var dl = p.download || (D.site && D.site.downloadDefault) || '';
 
     el.buy.innerHTML =
       '<div class="buy">' +
-        '<div class="buy-head"><h3>获取与使用</h3><span class="members">MEMBERS ACCESS</span></div>' +
+        '<div class="buy-head"><h3>获取与使用</h3></div>' +
         '<div class="buy-body">' +
           '<div class="price-row">' +
             '<span class="num">' + (isFree ? '免费' : '¥' + p.price) + (isFree ? '' : '<small>起</small>') + '</span>' +
             (isFree ? '' : '<span class="was">¥' + wasPrice + '</span><span class="save">限时 -26%</span>') +
           '</div>' +
-          '<button class="btn acid block lg" type="button" data-need-login>' +
-            (isFree ? '登录后免费获取' : '登录后获取') +
-          '</button>' +
-          '<p class="buy-note">登录后资源永久保存在账号，可随时重新下载</p>' +
+          (dl
+            ? '<a class="btn acid block lg" href="' + App.esc(dl) + '" target="_blank" rel="noopener">' +
+                App.icon('download') + '点击下载</a>'
+            : '<button class="btn acid block lg" type="button" data-no-link>' +
+                App.icon('download') + '点击下载</button>') +
+          '<p class="buy-note">' + (dl ? '点击即可下载，无需注册' : '该资源还没配置下载链接') + '</p>' +
           '<ul class="perks">' +
-            '<li>' + App.icon('check') + '一次获取，永久可下载</li>' +
-            '<li>' + App.icon('check') + '后续版本更新免费获取</li>' +
+            '<li>' + App.icon('check') + '点击直下，无需注册登录</li>' +
+            '<li>' + App.icon('check') + '后续更新沿用同一链接</li>' +
             '<li>' + App.icon('check') + '含商用授权（详见授权说明）</li>' +
             '<li>' + App.icon('check') + '支持 2 台设备同时使用</li>' +
           '</ul>' +
@@ -176,11 +183,13 @@
       App.toast(on ? '已加入收藏' : '已取消收藏');
     });
 
-    // 登录按钮提示
-    var loginBtn = el.buy.querySelector('[data-need-login]');
-    loginBtn.addEventListener('click', function () {
-      App.toast('登录功能待接后端（P1 仅前端）');
-    });
+    // 没配链接时给明确指引，而不是一个点了没反应的按钮
+    var noLink = el.buy.querySelector('[data-no-link]');
+    if (noLink) {
+      noLink.addEventListener('click', function () {
+        App.toast('在 data.js 里给该资源填 download 字段即可');
+      });
+    }
   }
 
   function renderRelated(p) {
@@ -212,7 +221,7 @@
       var rel = document.querySelector('.related');
       if (grid) grid.style.display = 'none';
       if (rel) rel.style.display = 'none';
-      if (el.crumbs) el.crumbs.innerHTML = '<a href="index.html">首页</a><span class="sep">/</span><span class="cur">资源不存在</span>';
+      App.setCrumbs([{ label: '首页', href: 'index.html' }, { label: '资源不存在' }]);
       return;
     }
 

@@ -25,6 +25,7 @@
     price: document.getElementById('fPrice'),
     free: document.getElementById('fFree'),
     license: document.getElementById('fLicense'),
+    download: document.getElementById('fDownload'),
     desc: document.getElementById('fDesc'),
     install: document.getElementById('fInstall'),
     dz: document.getElementById('dz'),
@@ -123,6 +124,7 @@
       desc: (el.desc.value || '').trim(),
       install: (el.install.value || '').trim(),
       license: (el.license.value || '').trim() || '详见授权说明。',
+      download: (el.download.value || '').trim(),
       updated: new Date().toISOString().slice(0, 10),
       downloads: 0
     };
@@ -230,6 +232,11 @@
   function boot() {
     fillCategories();
     bind();
+    App.setCrumbs([
+      { label: '首页', href: '../index.html' },
+      { label: '后台' },
+      { label: '上传资源' }
+    ]);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

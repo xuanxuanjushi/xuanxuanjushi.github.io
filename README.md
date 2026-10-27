@@ -47,6 +47,48 @@ Web station/
 
 URL 参数即状态：`?cat=ai`、`?q=海报`、`?fav=1` 都能直接分享/刷新复现。
 
+### 联系方式与「点击下载」
+
+页脚名片（头像 / 姓名 / 职位 / 公司 / 电话 / 微信码）由 `app.js` 的 `renderFoot()` 统一渲染，
+数据在 `data.js` 的 `site.contact` 里改一处，三个页面同步：
+
+```js
+contact: {
+  avatar: '',                                 // 填 'assets/img/avatar.jpg' 就换成真头像，留空用姓名首字
+  title: '高级设计师',
+  company: '深圳市智领未来电子科技有限公司',
+  phone: '15873329367',
+  wechatQr: 'assets/img/wechat-qr.png',       // 换成自己的微信二维码截图即可
+  github: 'xuanxuanjushi'
+}
+```
+
+> `assets/img/wechat-qr.png` 目前是**占位码**：内容是含姓名/职位/公司/电话的 vCard，扫出来能存联系人。
+> 换成真微信码只需覆盖这张图，代码不用动。
+
+详情页的「点击下载」读 `项目.download`，为空时回落到 `site.downloadDefault`：
+
+```js
+{ id: 'p01', ... , download: 'https://pan.example.com/xxx' }   // 网盘 / Release / CDN 任意直链
+```
+
+两者都为空时按钮仍显示，点击提示去配置，不会是个死链。
+
+### 全站导航原则
+
+每个页面都有：**图标式返回**（从站内点进来的走 `history.back()`，直接打开的回逻辑父级）+ **面包屑**（知道自己在哪）+ **回到顶部**（滚动 360px 后出现）。
+首页是站点根，没有来路时整条定位条不显示，避免出现只有「首页」的空条。
+
+### 「收藏网站」分类是链接区
+
+`data.js` 的 `sites` 数组渲染成站点卡（色块图标 + 名称 + 介绍 + 域名），与资源卡分开：
+
+```js
+sites: [{ name: '站酷 ZCOOL', url: 'https://www.zcool.com.cn/', desc: '一句话介绍', hue: 8 }]
+```
+
+`icon` 可选（填图片地址），留空则用名称首字 + `hue` 色相生成，不依赖外部 favicon 请求。
+
 ### ⚠ 封面图的版权
 
 `assets/img/covers/` 内 18 张图抓取自竞品站点，**仅用于版式占位**，版权属原权利人。

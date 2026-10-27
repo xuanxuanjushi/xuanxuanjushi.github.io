@@ -71,8 +71,11 @@
     var counts = {};
     pool.forEach(function (p) { counts[p.cat] = (counts[p.cat] || 0) + 1; });
 
+    var siteCount = (D.sites || []).length;
     var items = (D.categories || []).map(function (c) {
-      var n = c.id === 'all' ? pool.length : (counts[c.id] || 0);
+      var n = c.id === 'all' ? pool.length
+        : c.id === 'sites' ? siteCount
+        : (counts[c.id] || 0);
       return '<button class="chip' + (state.cat === c.id ? ' on' : '') + '" type="button" data-cat="' + c.id + '">' +
         App.esc(c.name) + ' <b>' + n + '</b></button>';
     });
@@ -92,6 +95,11 @@
     var pool = searchFiltered();
     var list = currentList();
 
+    // 收藏网站：渲染站点链接卡（图标 + 名称 + 介绍 + 域名）
+    if (state.cat === 'sites') { paintSites(); return; }
+    el.grid.className = 'grid-cards';
+    if (el.sort) el.sort.style.display = '';
+
     renderChips(pool);
 
     // 标题
@@ -101,14 +109,58 @@
     else if (state.cat !== 'all') title = App.catName(state.cat);
 
     el.title.textContent = title;
-    el.sub.textContent = '共 ' + list.length + ' 件资源' +
-      (state.cat !== 'all' && !state.favOnly && !state.q ? ' · ' + App.catName(state.cat) : '');
+    // 标题已经显示分类名，这里不再重复一次
+    el.sub.textContent = '共 ' + list.length + ' 件资源';
+
+    App.setCrumbs(state.favOnly || state.q || state.cat !== 'all'
+      ? [{ label: '首页', href: 'index.html' }, { label: title }]
+      : [{ label: '首页' }]);
 
     var shownList = list.slice(0, state.shown);
     App.renderGrid(el.grid, shownList);
 
     el.count.textContent = '已显示 ' + shownList.length + ' / ' + list.length + ' 件';
     el.more.style.display = list.length > state.shown ? '' : 'none';
+  }
+
+  function siteCard(it) {
+    var host = '';
+    try { host = new URL(it.url).host.replace(/^www\./, ''); } catch (e) { host = it.url; }
+    var ini = (it.name || '?').trim().charAt(0).toUpperCase();
+    var ico = it.icon
+      ? '<img src="' + App.esc(it.icon) + '" alt="">'
+      : '<span>' + App.esc(ini) + '</span>';
+
+    return '<a class="site-card" href="' + App.esc(it.url) + '" target="_blank" rel="noopener">' +
+      '<span class="site-ico" style="--h:' + (Number(it.hue) || 210) + '">' + ico + '</span>' +
+      '<span class="site-main">' +
+        '<span class="site-name">' + App.esc(it.name) + App.icon('link') + '</span>' +
+        '<span class="site-desc">' + App.esc(it.desc) + '</span>' +
+        '<span class="site-host">' + App.esc(host) + '</span>' +
+      '</span>' +
+    '</a>';
+  }
+
+  function paintSites() {
+    var q = state.q.toLowerCase();
+    var list = (D.sites || []).filter(function (it) {
+      return !q || (it.name + ' ' + it.desc + ' ' + it.url).toLowerCase().indexOf(q) > -1;
+    });
+
+    renderChips((D.projects || []).slice());
+
+    el.title.textContent = '收藏网站';
+    el.sub.textContent = '常用设计资源与开发工具，点开即走';
+    App.setCrumbs([{ label: '首页', href: 'index.html' }, { label: '收藏网站' }]);
+
+    el.grid.className = 'site-grid';
+    el.grid.innerHTML = list.length
+      ? list.map(siteCard).join('')
+      : '<div class="empty">没有匹配的站点。</div>';
+
+    el.count.textContent = '共 ' + list.length + ' 个站点';
+    el.more.style.display = 'none';
+    if (el.sort) el.sort.style.display = 'none';
   }
 
   function syncUrl() {

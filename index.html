@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>覃露雨的闺房 · 设计资产与 AI 工具</title>
 <meta name="description" content="设计资产、AI 工具、3D 素材与学习资料合集。">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23e2ff1a'/><rect x='11' y='11' width='10' height='10' rx='2' fill='%230d1000'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='16' fill='%23111213'/><circle cx='16' cy='16' r='9.8' stroke='%23e2ff1a' stroke-width='4.4' fill='none'/><path d='M20.1 20.1 22.79 22.79' stroke='%23e2ff1a' stroke-width='4.6' stroke-linecap='round'/></svg>"><rect width='32' height='32' rx='16' fill='%23111213'/><circle cx='15' cy='15' r='7.4' stroke='%23e2ff1a' stroke-width='4.2' fill='none'/><path d='M19.6 19.6 25 25' stroke='%23e2ff1a' stroke-width='4.2' stroke-linecap='round'/></svg>"><rect width='32' height='32' rx='8' fill='%23e2ff1a'/><rect x='11' y='11' width='10' height='10' rx='2' fill='%230d1000'/></svg>">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
@@ -16,7 +16,12 @@
   </button>
 
   <a class="logo" href="index.html">
-    <span class="logo-mark" aria-hidden="true"></span>
+    <span class="logo-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="9.8" stroke="currentColor" stroke-width="4.4"/>
+        <path d="M20.1 20.1 22.79 22.79" stroke="currentColor" stroke-width="4.6" stroke-linecap="round"/>
+      </svg>
+    </span>
     <span class="logo-text" data-site-name>覃露雨的闺房</span>
   </a>
 
@@ -32,6 +37,11 @@
     <button class="icon-btn" type="button" data-theme-toggle aria-label="切换深浅色" title="切换深浅色">◐</button>
   </div>
 </header>
+
+<div class="subbar" data-subbar data-parent="works.html" data-home>
+  <button class="back-btn" type="button" data-back></button>
+  <nav class="crumb" data-crumb aria-label="当前位置"></nav>
+</div>
 
 <div class="shell">
   <aside class="sidebar" aria-label="侧栏导航">
@@ -66,15 +76,7 @@
         <span class="count" id="count"></span>
       </div>
 
-      <footer class="foot">
-        <span>© <span data-year>2026</span> <span data-site-name>覃露雨的闺房</span></span>
-        <span class="mono">P1 · 前端骨架 / 假数据</span>
-        <div class="links">
-          <a href="works.html">我的作品集</a>
-          <a href="deploy.html">发布中心</a>
-          <a href="admin/upload.html">上传资源</a>
-        </div>
-      </footer>
+      <footer class="site-foot" data-foot></footer>
 
     </div>
   </main>

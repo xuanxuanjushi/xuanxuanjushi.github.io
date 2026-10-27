@@ -12,7 +12,24 @@ window.SITE_DATA = {
     owner: '覃露雨',
     tagline: '设计资产 · AI 工具 · 学习资料',
     vip: false,
-    loggedIn: false            // 接后端后由会话决定
+    loggedIn: false,           // 接后端后由会话决定
+
+    /* 页脚联系方式（三个页面共用，由 app.js 统一渲染，避免每页复制一份） */
+    contact: {
+      avatar: '',                                        // 留空用姓名首字圆形头像；填 'assets/img/avatar.jpg' 自动换成真头像
+      name: '覃露雨',
+      title: '高级设计师',
+      company: '深圳市智领未来电子科技有限公司',
+      phone: '15873329367',
+      phoneLabel: '158 7332 9367',
+      wechatQr: 'assets/img/wechat-qr.png',              // 占位码：换成自己的微信二维码截图即可
+      wechatLabel: '微信扫码',
+      email: '',                                         // 填了就出现邮箱入口
+      github: 'xuanxuanjushi'
+    },
+
+    /* 下载链接的兜底值：资源自身的 download 为空时才用它（可放网盘、GitHub Release、CDN 等任意地址） */
+    downloadDefault: ''
   },
 
   /* 左侧栏分组；type: link 直接跳转，cat 走分类筛选 */
@@ -31,9 +48,10 @@ window.SITE_DATA = {
         { label: 'AI 工具', icon: 'spark', href: 'index.html?cat=ai' },
         { label: '设计素材', icon: 'image', href: 'index.html?cat=asset' },
         { label: '3D 素材', icon: 'box', href: 'index.html?cat=threed' },
-        { label: '角色与场景', icon: 'user', href: 'index.html?cat=character' },
+        { label: 'Skills 技能包', icon: 'package', href: 'index.html?cat=skills' },
+        { label: '男模审美', icon: 'male', href: 'index.html?cat=male' },
         { label: '海报与模板', icon: 'layers', href: 'index.html?cat=post' },
-        { label: '影视后期', icon: 'film', href: 'index.html?cat=video' },
+        { label: '收藏网站', icon: 'link', href: 'index.html?cat=sites' },
         { label: '学习资料', icon: 'book', href: 'index.html?cat=study' }
       ]
     },
@@ -52,13 +70,35 @@ window.SITE_DATA = {
     { id: 'ai', name: 'AI 工具' },
     { id: 'asset', name: '设计素材' },
     { id: 'threed', name: '3D 素材' },
-    { id: 'character', name: '角色与场景' },
+    { id: 'skills', name: 'Skills 技能包' },
+    { id: 'male', name: '男模审美' },
     { id: 'post', name: '海报与模板' },
-    { id: 'video', name: '影视后期' },
+    { id: 'sites', name: '收藏网站' },
     { id: 'study', name: '学习资料' }
   ],
 
-  /* cover / gallery 使用 assets/img/covers 下的短键 */
+  /* 「收藏网站」分类：链接收藏，渲染成站点卡（图标 + 名称 + 介绍 + 域名）
+   * icon 可留空（用首字母 + hue 色块），也可填图片地址，如 'assets/img/sites/zcool.png'
+   */
+  sites: [
+    { name: '站酷 ZCOOL', url: 'https://www.zcool.com.cn/', desc: '国内设计师社区，作品、教程与素材市场的起点。', hue: 8 },
+    { name: 'Behance', url: 'https://www.behance.net/', desc: 'Adobe 旗下作品集平台，看商业项目的完整推导过程。', hue: 220 },
+    { name: 'Dribbble', url: 'https://dribbble.com/', desc: 'UI 与插画灵感流，适合找趋势和配色参考。', hue: 340 },
+    { name: 'Figma Community', url: 'https://www.figma.com/community', desc: '免费设计文件、组件库与插件，可直接复制到自己的文件。', hue: 20 },
+    { name: 'Mobbin', url: 'https://mobbin.com/', desc: 'App 与网页的真实界面截图库，按流程和组件检索。', hue: 250 },
+    { name: 'Awwwards', url: 'https://www.awwwards.com/', desc: '网页设计评奖站，看交互与动效的具体手法。', hue: 0 },
+    { name: 'Unsplash', url: 'https://unsplash.com/', desc: '免费可商用高清图库，适合找氛围图和背景。', hue: 200 },
+    { name: 'Iconify', url: 'https://icon-sets.iconify.design/', desc: '20 万+ 开源图标统一检索，一套代码调所有图标库。', hue: 150 },
+    { name: 'Coolors', url: 'https://coolors.co/', desc: '配色生成器，一键出五色方案并可导出变量。', hue: 280 },
+    { name: 'Can I use', url: 'https://caniuse.com/', desc: '前端特性兼容性查询，做响应式与降级前先查这里。', hue: 100 },
+    { name: '优设 UISDC', url: 'https://www.uisdc.com/', desc: '中文设计文章与教程，偏方法论与行业观察。', hue: 45 },
+    { name: 'Fonts In Use', url: 'https://fontsinuse.com/', desc: '真实场景里的字体使用案例，找排版参照。', hue: 320 }
+  ],
+
+  /* cover / gallery 使用 assets/img/covers 下的短键。
+   * 每件资源可加 download 字段（网盘 / Release / CDN 任意直链），详情页的「点击下载」直接用它；
+   * 不填则回落到 SITE_DATA.site.downloadDefault；两者都空时点击只提示去配置。
+   */
   projects: [
     {
       id: 'p01', title: '细密点阵 PPT 模板', cat: 'post', featured: true,
@@ -101,7 +141,7 @@ window.SITE_DATA = {
       license: '单机授权，可安装于 2 台设备；不得去除版权信息后转售。'
     },
     {
-      id: 'p05', title: '角色风格转绘 Skill', cat: 'character',
+      id: 'p05', title: '角色风格转绘 Skill', cat: 'skills',
       subtitle: '写实人像转二次元，保留五官比例与光影关系',
       cover: 'p05', gallery: ['p05', 'p06', 'p12'],
       version: 'v1.1.0', author: '覃露雨', updated: '2026-10-19', code: 'CH-1101',
@@ -111,7 +151,7 @@ window.SITE_DATA = {
       license: '生成的图像可商用；工作流文件不可转售，不可打包进付费课程。'
     },
     {
-      id: 'p06', title: '超写实人偶 Skill', cat: 'character',
+      id: 'p06', title: '超写实人偶 Skill', cat: 'skills',
       subtitle: '瓷感肤质与绒面材质，含三组打光预设',
       cover: 'p06', gallery: ['p06', 'p05', 'p07'],
       version: 'v1.0.4', author: '覃露雨', updated: '2026-10-18', code: 'CH-1004',
@@ -191,7 +231,7 @@ window.SITE_DATA = {
       license: '可用于商业海报与电商详情页；模板本身不得转售。'
     },
     {
-      id: 'p14', title: '烟雾模拟系统', cat: 'video',
+      id: 'p14', title: '烟雾模拟系统', cat: 'threed',
       subtitle: '流体解算预设，含 6 组风力与温度参数',
       cover: 'p14', gallery: ['p14', 'p12', 'p11'],
       version: 'v1.2.1', author: '覃露雨', updated: '2026-10-10', code: 'VD-1201',
@@ -211,7 +251,7 @@ window.SITE_DATA = {
       license: '仅限个人学习，不得录制传播或二次售卖。'
     },
     {
-      id: 'p16', title: 'AI 影视 Agent', cat: 'video',
+      id: 'p16', title: 'AI 影视 Agent', cat: 'ai',
       subtitle: '剧本 → 分镜 → 图生视频，一条链路出 30 秒片',
       cover: 'p16', gallery: ['p16', 'p09', 'p05'],
       version: 'v1.1.0', author: '覃露雨', updated: '2026-10-08', code: 'VD-1100',
@@ -229,6 +269,16 @@ window.SITE_DATA = {
       desc: '本地文件夹扫描 + 预览缩略图 + 相似图去重。支持按尺寸、色相、创建时间筛选，批量改名可套规则。',
       install: 'Windows / macOS 桌面端，解压即用；首次启动会让你选一个素材根目录。',
       license: '免费使用；源码可见，允许修改。'
+    },
+    {
+      id: 'p19', title: '男模审美图集', cat: 'male',
+      subtitle: '60 组男性人像参考：姿态、光位与构图拆解',
+      cover: 'p19', gallery: ['p19', 'p06', 'p05'],
+      version: 'v1.0.0', author: '覃露雨', updated: '2026-10-26', code: 'ML-1000',
+      free: true, price: 0, badge: '新品', downloads: 216,
+      desc: '挑的是「耐看」而不是「好看」：同一套光位下不同体态的气质差异、肩颈与下颌的角度、留白与裁切的关系。每张都标注了镜头焦段与主光方向。',
+      install: 'PDF + 图片文件夹，按「姿态 / 光位 / 构图」三类分目录，直接拖进参考板即可。',
+      license: '仅限个人学习与内部提案参考，不得直接商用或二次分发。'
     },
     {
       id: 'p18', title: '头脑风暴导图', cat: 'post',

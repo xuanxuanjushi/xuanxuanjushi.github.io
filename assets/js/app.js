@@ -35,7 +35,15 @@
     clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7.5V12l3 2',
     tag: 'M3.5 11.5 11 4h8a1 1 0 0 1 1 1v8l-7.5 7.5a1 1 0 0 1-1.4 0L3.5 12.9a1 1 0 0 1 0-1.4z M16 8.2v.1',
     monitor: 'M3 5h18v11H3zM9 20h6M12 16v4',
-    x: 'M6 6l12 12M18 6L6 18'
+    male: 'M12 11a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM15.4 8.6 20 4M20 4h-4.6M20 4v4.6',
+    phone: 'M6.5 3.5h3L11 8l-2 1.4a12.5 12.5 0 0 0 5.6 5.6L16 13l4.5 1.5v3a2 2 0 0 1-2 2A17 17 0 0 1 4.5 5.5a2 2 0 0 1 2-2z',
+    mail: 'M3 6h18v12H3zM3.5 7l8.5 6 8.5-6',
+    github: 'M9.2 20.4c-4-1.2-6.2-4.4-6.2-8.4a9 9 0 0 1 18 0c0 4-2.2 7.2-6.2 8.4M9.2 20.4v-2.6c0-.7.2-1.2.6-1.6-2-.2-4-1.1-4-4.4 0-1 .3-1.8.9-2.4-.1-.3-.4-1.2.1-2.3 0 0 .7-.2 2.4.9a8 8 0 0 1 4.2 0c1.7-1.1 2.4-.9 2.4-.9.5 1.1.2 2 .1 2.3.6.6.9 1.4.9 2.4 0 3.3-2 4.2-4 4.4.4.4.6.9.6 1.6v2.6',
+    x: 'M6 6l12 12M18 6L6 18',
+    package: 'M4 7.5 12 3l8 4.5v9L12 21l-8-4.5zM8 5.2v9.4M16 5.2v9.4',
+    link: 'M10.5 13.5a4 4 0 0 0 5.7 0l2-2a4 4 0 0 0-5.7-5.7l-1.2 1.2M13.5 10.5a4 4 0 0 0-5.7 0l-2 2a4 4 0 0 0 5.7 5.7l1.2-1.2',
+    back: 'M15 5l-7 7 7 7',
+    up: 'M12 19V5M6 11l6-6 6 6'
   };
 
   function icon(name, cls) {
@@ -239,6 +247,142 @@
     }).join('');
   }
 
+  /* ==================== 定位条：返回 + 面包屑 + 回到顶部 ==================== */
+  var crumbs = [];
+
+  function setCrumbs(items) {
+    crumbs = items || [];
+    paintCrumbs();
+  }
+
+  function paintCrumbs() {
+    var nav = document.querySelector('[data-crumb]');
+    if (!nav) return;
+    if (!crumbs.length) { nav.innerHTML = ''; return; }
+    nav.innerHTML = crumbs.map(function (it, i) {
+      var last = i === crumbs.length - 1;
+      var sep = i ? '<span class="sep">/</span>' : '';
+      return sep + (it.href && !last
+        ? '<a href="' + esc(it.href) + '">' + esc(it.label) + '</a>'
+        : '<span class="cur"' + (last ? ' aria-current="page"' : '') + '>' + esc(it.label) + '</span>');
+    }).join('');
+  }
+
+  function initSubbar() {
+    var bar = document.querySelector('[data-subbar]');
+    if (!bar) return;
+
+    var back = bar.querySelector('[data-back]');
+    var fromSite = false;
+    try {
+      fromSite = !!(document.referrer && new URL(document.referrer).origin === location.origin);
+    } catch (err) { fromSite = false; }
+
+    // 首页是站点根：没有来路时整条定位条都不显示，避免出现一条只有「首页」的空条
+    if (bar.hasAttribute('data-home') && !fromSite) { bar.style.display = 'none'; }
+    else if (back && bar.hasAttribute('data-home')) { /* 有来路 → 显示返回 */ }
+
+    if (back) {
+      back.innerHTML = icon('back');
+      back.setAttribute('aria-label', '返回上一页');
+      back.title = '返回';
+      back.addEventListener('click', function (e) {
+        e.preventDefault();
+        var sameOrigin = false;
+        try {
+          sameOrigin = document.referrer && new URL(document.referrer).origin === location.origin;
+        } catch (err) { sameOrigin = false; }
+
+        // 从站内点进来的就回退（保留筛选与滚动），直接打开的就回逻辑父级
+        if (sameOrigin && history.length > 1) history.back();
+        else {
+          var parent = bar.getAttribute('data-parent');
+          location.href = parent || 'index.html';
+        }
+      });
+    }
+
+    // 回到顶部
+    var top = document.createElement('button');
+    top.type = 'button';
+    top.className = 'to-top';
+    top.setAttribute('aria-label', '回到顶部');
+    top.title = '回到顶部';
+    top.innerHTML = icon('up');
+    document.body.appendChild(top);
+
+    top.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    var onScroll = function () {
+      top.classList.toggle('on', window.scrollY > 360);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  /* ==================== 页脚（三页共用，只在这里维护一份） ==================== */
+  function renderFoot() {
+    var hosts = document.querySelectorAll('[data-foot]');
+    if (!hosts.length) return;
+
+    var c = (D.site && D.site.contact) || {};
+    var pre = rootPrefix();
+
+    var avatar = c.avatar
+      ? '<img src="' + esc(pre + c.avatar) + '" alt="' + esc(c.name || '') + '">'
+      : '<span>' + esc((c.name || '覃').charAt(0)) + '</span>';
+
+    var rows = [];
+    if (c.phone) {
+      rows.push('<a class="contact-row" href="tel:' + esc(c.phone) + '">' + icon('phone') +
+        '<span>' + esc(c.phoneLabel || c.phone) + '</span></a>');
+    }
+    if (c.email) {
+      rows.push('<a class="contact-row" href="mailto:' + esc(c.email) + '">' + icon('mail') +
+        '<span>' + esc(c.email) + '</span></a>');
+    }
+    if (c.github) {
+      rows.push('<a class="contact-row" href="https://github.com/' + esc(c.github) + '" target="_blank" rel="noopener">' +
+        icon('github') + '<span>@' + esc(c.github) + '</span></a>');
+    }
+
+    var qr = c.wechatQr
+      ? '<div class="qr-box"><img src="' + esc(pre + c.wechatQr) + '" alt="' + esc(c.wechatLabel || '微信二维码') + '"' +
+          ' title="占位二维码（含姓名/职位/公司/电话），替换 assets/img/wechat-qr.png 即可换成自己的微信码"></div>' +
+        '<span class="qr-label">' + esc(c.wechatLabel || '微信扫码') + '</span>'
+      : '';
+
+    var html = '' +
+      '<div class="foot-inner">' +
+        '<section class="contact-card">' +
+          '<div class="contact-main">' +
+            '<div class="avatar">' + avatar + '</div>' +
+            '<div class="ident">' +
+              '<div class="ident-top">' +
+                '<h3 class="ident-name">' + esc(c.name || '') + '</h3>' +
+                (c.title ? '<span class="ident-role">' + esc(c.title) + '</span>' : '') +
+              '</div>' +
+              (c.company ? '<p class="ident-org">' + esc(c.company) + '</p>' : '') +
+            '</div>' +
+          '</div>' +
+          (rows.length ? '<div class="contact-rows">' + rows.join('') + '</div>' : '<div></div>') +
+          (qr ? '<div class="contact-qr">' + qr + '</div>' : '') +
+        '</section>' +
+        '<div class="foot-bar">' +
+          '<span>© <span data-year>' + new Date().getFullYear() + '</span> ' + esc(c.name || (D.site && D.site.owner) || '') + '</span>' +
+          '<nav class="foot-links">' +
+            '<a href="' + esc(pre) + 'index.html">资源首页</a>' +
+            '<a href="' + esc(pre) + 'works.html">我的作品集</a>' +
+            '<a href="' + esc(pre) + 'deploy.html">发布中心</a>' +
+          '</nav>' +
+        '</div>' +
+      '</div>';
+
+    Array.prototype.forEach.call(hosts, function (host) { host.innerHTML = html; });
+  }
+
   function initShell() {
     initTheme();
 
@@ -255,6 +399,8 @@
     });
 
     renderSidebar();
+    renderFoot();
+    initSubbar();
 
     // 侧栏开关：桌面折叠，窄屏抽屉
     var toggle = document.querySelector('[data-side-toggle]');
@@ -319,6 +465,7 @@
     icon: icon, esc: esc, imgUrl: imgUrl, money: money, num: num, catName: catName,
     param: param, byId: byId, toast: toast, renderGrid: renderGrid, cardHtml: cardHtml,
     isFav: isFav, toggleFav: toggleFav, initShell: initShell, rootPrefix: rootPrefix,
+    setCrumbs: setCrumbs,
     data: D
   };
 
