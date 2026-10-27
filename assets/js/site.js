@@ -170,8 +170,8 @@
   function initTheme() {
     var saved = null;
     try { saved = localStorage.getItem(THEME_KEY); } catch (e) {}
-    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = saved || (prefersDark ? 'dark' : 'light');
+    // 站点视觉基调是深色（参考站为深色界面），默认 dark，用户切换后记住选择
+    var theme = saved || 'dark';
     document.documentElement.setAttribute('data-theme', theme);
 
     var btn = document.getElementById('themeToggle');

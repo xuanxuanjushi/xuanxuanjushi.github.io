@@ -680,7 +680,7 @@
     var THEME_KEY = 'ws.theme';
     try {
       var t = localStorage.getItem(THEME_KEY);
-      document.documentElement.setAttribute('data-theme', t || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+      document.documentElement.setAttribute('data-theme', t || 'dark');
     } catch (e) {}
     var tg = document.getElementById('themeToggle');
     if (tg) tg.addEventListener('click', function () {
