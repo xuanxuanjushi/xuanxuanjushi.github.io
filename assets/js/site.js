@@ -16,11 +16,11 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  /** 只允许 http/https/mailto，防注入 javascript: */
+  /** 过滤危险协议（javascript:/data:），允许 http(s)、mailto、根路径与相对路径 */
   function safeHref(url) {
     if (!url) return '';
     var u = String(url).trim();
-    return /^(https?:\/\/|mailto:|\/|\.\/|#)/i.test(u) ? u : '';
+    return /^(javascript|data|vbscript|file):/i.test(u) ? '' : u;
   }
 
   function firstChar(s) {
@@ -31,6 +31,7 @@
   /* ---------- 文案绑定 ---------- */
   function bindText() {
     var map = {
+      siteName: CFG.siteName,
       name: CFG.name,
       tagline: CFG.tagline,
       intro: CFG.intro,
@@ -61,7 +62,7 @@
       el.textContent = CFG.github ? '@' + CFG.github : 'GitHub';
     });
 
-    document.title = (CFG.name || '个人') + ' · 作品集';
+    document.title = (CFG.siteName || CFG.name || '个人站') + ' · 作品集';
   }
 
   /* ---------- 技能 ---------- */
