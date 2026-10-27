@@ -1823,12 +1823,16 @@ body.side-collapsed .side-inner { display: none; }
 .note-min { margin-left: auto; font-family: var(--mono); font-size: .64rem; color: var(--muted); }
 
 /* 10.8 学习笔记：正文 ---------------------------------------------------- */
+/* 阅读区与目录当成一组：整组定宽居中，正文列宽 = 正文测量宽，
+   避免「正文 640 / 列 850 / 目录在最右边」造成的三段式空档 */
 .article-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 288px;
-  gap: 26px;
+  grid-template-columns: minmax(0, 1fr) 272px;
+  gap: 44px;
   align-items: start;
-  padding-top: 18px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding-top: 22px;
 }
 
 .article { min-width: 0; }
@@ -1846,24 +1850,21 @@ body.side-collapsed .side-inner { display: none; }
 
 .article-head h1 {
   margin: 12px 0 0;
-  font-size: clamp(1.5rem, 2.6vw, 2.15rem);
+  font-size: clamp(1.55rem, 2.5vw, 2.05rem);
   font-weight: 800;
   letter-spacing: -0.035em;
-  line-height: 1.2;
-  max-width: 28ch;
+  line-height: 1.25;
 }
 
 .article-lead {
   margin-top: 12px;
-  max-width: 60ch;
-  font-size: .88rem;
-  line-height: 1.8;
+  font-size: .9rem;
+  line-height: 1.85;
   color: var(--muted);
 }
 
 .article-body {
-  margin-top: 26px;
-  max-width: 68ch;
+  margin-top: 24px;
   border-top: 1px solid var(--line);
   padding-top: 26px;
 }
@@ -1874,7 +1875,7 @@ body.side-collapsed .side-inner { display: none; }
   line-height: 1.95;
   color: var(--ink-2);
 }
-.nb-p + .nb-p { margin-top: 14px; }
+.nb-p + .nb-p { margin-top: 18px; }
 
 .nb-h2 {
   position: relative;
@@ -2144,7 +2145,7 @@ body.side-collapsed .side-inner { display: none; }
   .contact-card { grid-template-columns: auto minmax(0, 1fr); gap: 14px; }
   .notes-grid { grid-template-columns: 1fr; }
   .note-card { grid-template-columns: 112px minmax(0, 1fr); }
-  .article-grid { grid-template-columns: 1fr; gap: 18px; }
+  .article-grid { grid-template-columns: 1fr; gap: 18px; max-width: none; margin: 0; }
   .article-side { order: 2; }
   .article-head h1 { font-size: 1.4rem; }
   .about-hero { grid-template-columns: 1fr; gap: 18px; padding-top: 20px; }

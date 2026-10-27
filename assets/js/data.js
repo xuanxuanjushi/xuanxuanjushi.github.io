@@ -41,7 +41,13 @@ window.SITE_DATA = {
       items: [
         { label: '首页', icon: 'home', href: 'index.html', active: true },
         { label: '所有资源', icon: 'grid', href: 'index.html' },
-        { label: '我的收藏', icon: 'star', href: 'index.html?fav=1' },
+        { label: '我的收藏', icon: 'star', href: 'index.html?fav=1' }
+      ]
+    },
+    {
+      /* 独立成组：它是「我写的文章」，不属于资源分类 */
+      title: '专栏',
+      items: [
         { label: '学习笔记', icon: 'note', href: 'notes.html' }
       ]
     },

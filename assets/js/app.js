@@ -41,6 +41,7 @@
     github: 'M9.2 20.4c-4-1.2-6.2-4.4-6.2-8.4a9 9 0 0 1 18 0c0 4-2.2 7.2-6.2 8.4M9.2 20.4v-2.6c0-.7.2-1.2.6-1.6-2-.2-4-1.1-4-4.4 0-1 .3-1.8.9-2.4-.1-.3-.4-1.2.1-2.3 0 0 .7-.2 2.4.9a8 8 0 0 1 4.2 0c1.7-1.1 2.4-.9 2.4-.9.5 1.1.2 2 .1 2.3.6.6.9 1.4.9 2.4 0 3.3-2 4.2-4 4.4.4.4.6.9.6 1.6v2.6',
     x: 'M6 6l12 12M18 6L6 18',
     id: 'M3 6h18v12H3zM7.5 10h2.6v4H7.5zM13 10h4.8M13 13.4h4.8',
+    note: 'M6 3.5h7.5L18 8v12.5H6zM13.5 3.5V8H18M9 12.5h6M9 16h4',
     wechat: 'M4 7A3 3 0 0 1 7 4h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H10l-4 3v-3.2A3 3 0 0 1 4 13z',
     package: 'M4 7.5 12 3l8 4.5v9L12 21l-8-4.5zM8 5.2v9.4M16 5.2v9.4',
     link: 'M10.5 13.5a4 4 0 0 0 5.7 0l2-2a4 4 0 0 0-5.7-5.7l-1.2 1.2M13.5 10.5a4 4 0 0 0-5.7 0l-2 2a4 4 0 0 0 5.7 5.7l1.2-1.2',
@@ -230,9 +231,12 @@
         var path = href.split('?')[0];
         var isIndex = path === 'index.html' || path === '../index.html';
 
+        // 只有真的在列表页时，「首页 / 分类 / 收藏」才算激活；否则在 notes/about 页会双高亮
+        var onIndex = /(^|\/)index\.html$/.test(here) || /\/$/.test(here);
+
         var active = false;
         if (isIndex) {
-          if (it.href === 'index.html' && !cat && !favOnly && it.label === '首页') active = true;
+          if (it.href === 'index.html' && onIndex && !cat && !favOnly && it.label === '首页') active = true;
           if (cat && it.href === 'index.html?cat=' + cat) active = true;
           if (favOnly && it.href === 'index.html?fav=1') active = true;
         } else {
