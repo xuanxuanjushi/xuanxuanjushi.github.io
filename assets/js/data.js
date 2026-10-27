@@ -16,7 +16,7 @@ window.SITE_DATA = {
 
     /* 页脚联系方式（三个页面共用，由 app.js 统一渲染，避免每页复制一份） */
     contact: {
-      avatar: '',                                        // 留空用姓名首字圆形头像；填 'assets/img/avatar.jpg' 自动换成真头像
+      avatar: 'assets/img/avatar.jpg',                   // 人物照（圆形裁切），留空则回落到姓名首字
       name: '覃露雨',
       title: '高级设计师',
       company: '深圳市智领未来电子科技有限公司',
@@ -84,6 +84,13 @@ window.SITE_DATA = {
   about: {
     name: '覃露雨',
     enName: 'QIN LUYU',
+    portrait: 'assets/img/portrait.jpg',   // 简介页首屏竖幅肖像
+    stats: [
+      { n: '4', unit: '段', label: '实习与工作' },
+      { n: '10', unit: '件', label: '作品收录' },
+      { n: '7', unit: '项', label: '证书与荣誉' },
+      { n: '4', unit: '年', label: '视觉传达专业' }
+    ],
     title: '高级设计师',
     company: '深圳市智领未来电子科技有限公司',
     intro: '视觉传达设计本科毕业。做过品牌视觉全流程：从服饰、广告物料到电商详情页，能把需求翻译成可落地的平面方案，也用过 AE / PR 做动态表达。相信电商视觉要靠持续迭代，愿意在项目里把每一个细节磨到可交付。',

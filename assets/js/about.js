@@ -22,29 +22,42 @@
   /* ---------- 首屏 ---------- */
   function renderHero() {
     var contact = (D.site && D.site.contact) || {};
-    var av = contact.avatar
-      ? '<img src="' + App.esc(contact.avatar) + '" alt="' + App.esc(A.name) + '">'
-      : '<span>' + App.esc(initials(A.name)) + '</span>';
+    var portrait = A.portrait || contact.avatar || '';
+
+    var photo = portrait
+      ? '<figure class="portrait">' +
+          '<img src="' + App.esc(portrait) + '" alt="' + App.esc(A.name) + ' 的肖像照">' +
+          '<figcaption>Portrait · ' + App.esc(A.enName || '') + '</figcaption>' +
+        '</figure>'
+      : '<figure class="portrait is-empty"><span>' + App.esc(initials(A.name)) + '</span></figure>';
+
+    var stats = (A.stats || []).map(function (st) {
+      return '<div class="stat"><b>' + App.esc(st.n) + '<em>' + App.esc(st.unit || '') + '</em></b>' +
+        '<span>' + App.esc(st.label) + '</span></div>';
+    }).join('');
 
     el.hero.innerHTML =
-      '<div class="about-avatar">' + av + '</div>' +
+      photo +
       '<div class="about-id">' +
-        '<span class="mono">Visual Designer · ' + App.esc(A.enName || '') + '</span>' +
+        '<span class="mono about-eyebrow">Visual Designer · ' + App.esc(A.enName || '') + '</span>' +
         '<h1>' + App.esc(A.name) + '</h1>' +
         '<p class="about-role">' +
           '<b>' + App.esc(A.title) + '</b>' +
           (A.company ? '<span class="dot"></span><span>' + App.esc(A.company) + '</span>' : '') +
         '</p>' +
-        '<p class="about-intro">' + App.esc(A.intro) + '</p>' +
+        '<p class="about-lead">' + App.esc(A.intro) + '</p>' +
         '<div class="tag-row about-tags">' +
           (A.tags || []).map(function (t) { return '<span class="tag">' + App.esc(t) + '</span>'; }).join('') +
         '</div>' +
         '<div class="about-actions">' +
           '<a class="btn acid" href="works.html">看作品集' + App.icon('link') + '</a>' +
           (contact.phone ? '<a class="btn" href="tel:' + App.esc(contact.phone) + '">' + App.icon('phone') + App.esc(contact.phoneLabel || contact.phone) + '</a>' : '') +
-          '<button class="btn ghost" type="button" data-need-login>' + App.icon('mail') + '发消息</button>' +
+          (D.site && D.site.contact && D.site.contact.email
+            ? '<a class="btn ghost" href="mailto:' + App.esc(contact.email) + '">' + App.icon('mail') + '邮件</a>'
+            : '<button class="btn ghost" type="button" data-need-login>' + App.icon('mail') + '发消息</button>') +
         '</div>' +
-      '</div>';
+      '</div>' +
+      (stats ? '<dl class="about-stats">' + stats + '</dl>' : '');
 
     App.setCrumbs([{ label: '首页', href: 'index.html' }, { label: '个人简介' }]);
     document.title = A.name + ' · 个人简介';
