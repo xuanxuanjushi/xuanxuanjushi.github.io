@@ -41,6 +41,7 @@
     github: 'M9.2 20.4c-4-1.2-6.2-4.4-6.2-8.4a9 9 0 0 1 18 0c0 4-2.2 7.2-6.2 8.4M9.2 20.4v-2.6c0-.7.2-1.2.6-1.6-2-.2-4-1.1-4-4.4 0-1 .3-1.8.9-2.4-.1-.3-.4-1.2.1-2.3 0 0 .7-.2 2.4.9a8 8 0 0 1 4.2 0c1.7-1.1 2.4-.9 2.4-.9.5 1.1.2 2 .1 2.3.6.6.9 1.4.9 2.4 0 3.3-2 4.2-4 4.4.4.4.6.9.6 1.6v2.6',
     x: 'M6 6l12 12M18 6L6 18',
     id: 'M3 6h18v12H3zM7.5 10h2.6v4H7.5zM13 10h4.8M13 13.4h4.8',
+    wechat: 'M4 7A3 3 0 0 1 7 4h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H10l-4 3v-3.2A3 3 0 0 1 4 13z',
     package: 'M4 7.5 12 3l8 4.5v9L12 21l-8-4.5zM8 5.2v9.4M16 5.2v9.4',
     link: 'M10.5 13.5a4 4 0 0 0 5.7 0l2-2a4 4 0 0 0-5.7-5.7l-1.2 1.2M13.5 10.5a4 4 0 0 0-5.7 0l-2 2a4 4 0 0 0 5.7 5.7l1.2-1.2',
     back: 'M15 5l-7 7 7 7',
@@ -344,6 +345,11 @@
       rows.push('<a class="contact-row" href="mailto:' + esc(c.email) + '">' + icon('mail') +
         '<span>' + esc(c.email) + '</span></a>');
     }
+    if (c.wechatId) {
+      // 微信号是可复制的文本，不做跳转；点一下复制，扫不出码时也能加
+      rows.push('<button class="contact-row" type="button" data-copy="' + esc(c.wechatId) + '">' +
+        icon('wechat') + '<span>微信 ' + esc(c.wechatId) + '</span></button>');
+    }
     if (c.github) {
       rows.push('<a class="contact-row" href="https://github.com/' + esc(c.github) + '" target="_blank" rel="noopener">' +
         icon('github') + '<span>@' + esc(c.github) + '</span></a>');
@@ -381,7 +387,21 @@
         '</div>' +
       '</div>';
 
-    Array.prototype.forEach.call(hosts, function (host) { host.innerHTML = html; });
+    Array.prototype.forEach.call(hosts, function (host) {
+      host.innerHTML = html;
+      // 微信号点击复制
+      Array.prototype.forEach.call(host.querySelectorAll('[data-copy]'), function (btn) {
+        btn.addEventListener('click', function () {
+          var val = btn.getAttribute('data-copy');
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(val).then(function () { toast('微信号已复制：' + val); },
+              function () { toast('复制失败，请手动选择：' + val); });
+          } else {
+            toast('微信号：' + val);
+          }
+        });
+      });
+    });
   }
 
   function initShell() {
@@ -421,8 +441,19 @@
       }
     } catch (e) {}
 
-    // 主题按钮
+    // 主题按钮：日/月双图标交叉淡入，比一个 ◐ 字符更像控件
     Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'), function (btn) {
+      btn.classList.add('theme-switch');
+      btn.innerHTML =
+        '<svg class="ti ti-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">' +
+          '<circle cx="12" cy="12" r="4.2"/>' +
+          '<path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/>' +
+        '</svg>' +
+        '<svg class="ti ti-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z"/>' +
+        '</svg>';
+      btn.setAttribute('aria-label', '切换深浅色');
+      btn.title = '切换深浅色';
       btn.addEventListener('click', toggleTheme);
     });
 

@@ -22,7 +22,9 @@ window.SITE_DATA = {
       company: '深圳市智领未来电子科技有限公司',
       phone: '15873329367',
       phoneLabel: '158 7332 9367',
-      wechatQr: 'assets/img/wechat-qr.png',              // 占位码：换成自己的微信二维码截图即可
+      wechatId: 'Congratulate-5',                        // 微信号（直接展示，扫不出码也能加）
+      wechatNick: 'rainrainrain',
+      wechatQr: 'assets/img/wechat-qr.png',              // 二维码图：换成微信「我的二维码」截图即可
       wechatLabel: '微信扫码',
       email: '',                                         // 填了就出现邮箱入口
       github: 'xuanxuanjushi'

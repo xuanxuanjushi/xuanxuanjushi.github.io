@@ -130,6 +130,20 @@ svg { display: block; width: 16px; height: 16px; flex: none; }
 .icon-btn:hover { background: var(--surface-2); color: var(--ink); border-color: var(--line); }
 .icon-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
+/* 主题切换：日/月两个图标叠放，按当前主题交叉淡入；hover 轻微旋转 */
+.theme-switch { position: relative; overflow: hidden; }
+.theme-switch .ti {
+  position: absolute;
+  width: 15px; height: 15px;
+  transition: opacity .22s ease, transform .34s cubic-bezier(.4, 1.2, .5, 1);
+}
+.theme-switch:hover .ti { transform: rotate(35deg); }
+
+[data-theme="dark"] .theme-switch .ti-sun { opacity: 0; transform: rotate(-70deg) scale(.5); }
+[data-theme="dark"] .theme-switch .ti-moon { opacity: 1; transform: none; }
+[data-theme="light"] .theme-switch .ti-sun { opacity: 1; transform: none; }
+[data-theme="light"] .theme-switch .ti-moon { opacity: 0; transform: rotate(70deg) scale(.5); }
+
 .logo {
   display: inline-flex;
   align-items: center;
