@@ -11,3 +11,6 @@ desktop.ini
 
 # 工程本地数据（不上仓库）
 .workbuddy/
+
+# AI 生成原图（只要成品，不要中间文件）
+.tmp/

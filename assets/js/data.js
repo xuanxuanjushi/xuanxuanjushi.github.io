@@ -60,7 +60,7 @@ window.SITE_DATA = {
         { label: '设计素材', icon: 'image', href: 'index.html?cat=asset' },
         { label: '3D 素材', icon: 'box', href: 'index.html?cat=threed' },
         { label: '海报与模板', icon: 'layers', href: 'index.html?cat=post' },
-        { label: '男模审美', icon: 'male', href: 'index.html?cat=male' },
+        { label: '男模收藏', icon: 'male', href: 'index.html?cat=male' },
         { label: '学习资料', icon: 'book', href: 'index.html?cat=study' },
         { label: '收藏网站', icon: 'link', href: 'index.html?cat=sites' }
       ]
@@ -83,7 +83,7 @@ window.SITE_DATA = {
     { id: 'asset', name: '设计素材' },
     { id: 'threed', name: '3D 素材' },
     { id: 'skills', name: 'Skills 技能包' },
-    { id: 'male', name: '男模审美' },
+    { id: 'male', name: '男模收藏' },
     { id: 'post', name: '海报与模板' },
     { id: 'sites', name: '收藏网站' },
     { id: 'study', name: '学习资料' }
@@ -485,9 +485,9 @@ window.SITE_DATA = {
       license: '免费使用；源码可见，允许修改。'
     },
     {
-      id: 'p19', title: '男模审美图集', cat: 'male',
+      id: 'p19', title: '男模收藏图集', cat: 'male',
       subtitle: '60 组男性人像参考：姿态、光位与构图拆解',
-      cover: 'p19', gallery: ['p19', 'p06', 'p05'],
+      cover: 'p19', gallery: ['p19-full', 'p06', 'p05'],
       version: 'v1.0.0', author: '覃露雨', updated: '2026-10-26', code: 'ML-1000',
       free: true, price: 0, badge: '新品', downloads: 216,
       desc: '挑的是「耐看」而不是「好看」：同一套光位下不同体态的气质差异、肩颈与下颌的角度、留白与裁切的关系。每张都标注了镜头焦段与主光方向。',
