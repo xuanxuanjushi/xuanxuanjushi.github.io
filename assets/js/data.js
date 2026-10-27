@@ -39,7 +39,8 @@ window.SITE_DATA = {
       items: [
         { label: '首页', icon: 'home', href: 'index.html', active: true },
         { label: '所有资源', icon: 'grid', href: 'index.html' },
-        { label: '我的收藏', icon: 'star', href: 'index.html?fav=1' }
+        { label: '我的收藏', icon: 'star', href: 'index.html?fav=1' },
+        { label: '学习笔记', icon: 'note', href: 'notes.html' }
       ]
     },
     {
@@ -78,6 +79,77 @@ window.SITE_DATA = {
     { id: 'post', name: '海报与模板' },
     { id: 'sites', name: '收藏网站' },
     { id: 'study', name: '学习资料' }
+  ],
+
+  /* ---------- 学习笔记 ----------
+   * blocks 是富内容块，渲染器支持：
+   *   { t:'h2', text }                      小标题
+   *   { t:'p', text }                       段落
+   *   { t:'quote', text, by }               引用
+   *   { t:'list', items:[...], ordered }    列表
+   *   { t:'code', lang, code }              代码块
+   *   { t:'img', src, alt, caption }        图片（点击放大）
+   *   { t:'video', src, poster, caption }   视频：src 填 mp4 直链或嵌入地址
+   *   { t:'demo', src, title, height }      直接跑起来的前端效果（iframe）
+   */
+  notes: [
+    {
+      id: 'n01',
+      title: '单文件番茄钟：把状态收进一个对象',
+      summary: '一个计时器最容易写成 spaghetti，这篇拆的是状态怎么收口、渲染怎么只做一件事。',
+      tags: ['原生 JS', '状态管理'],
+      date: '2026-10-26',
+      minutes: 6,
+      cover: 'assets/img/covers/p01.jpg',
+      blocks: [
+        { t: 'p', text: '计时器的复杂度不在「每秒减一」，而在开始/暂停/重置/切换阶段这四件事同时改状态。把状态收进一个对象，渲染函数只读不写，逻辑就塌不下去了。' },
+        { t: 'h2', text: '状态只有五个字段' },
+        { t: 'code', lang: 'js', code: "var st = {\n  mode: 'focus',   // focus | short | long\n  left: 1500,      // 剩余秒数\n  total: 1500,     // 本轮总长，用于画进度环\n  running: false,\n  done: 0          // 已完成番茄数\n};" },
+        { t: 'p', text: '渲染函数只做一件事：把 st 映射成 DOM。不做判断以外的任何副作用，也不反向修改 st。' },
+        { t: 'list', items: ['所有会改 st 的地方，只允许出现在 tick / start / pause / reset / next 五个函数里', 'DOM 更新集中在 paint()，它不判断业务，只读状态', '进度环用 stroke-dashoffset 而不是重画 SVG，避免每帧布局'] },
+        { t: 'quote', text: '先想清楚「谁有权改状态」，再想界面怎么画——顺序反了就要返工。', by: '实现笔记' },
+        { t: 'demo', src: 'apps/hello-card/index.html', title: '番茄钟（可直接操作）', height: 560 },
+        { t: 'h2', text: '换成你自己的计时器' },
+        { t: 'p', text: '想改时长只动三个常量：FOCUS / SHORT / LONG；想加「跳过本阶段」，复制 next() 的调用即可，其余不用碰。' }
+      ]
+    },
+    {
+      id: 'n02',
+      title: '电商详情页的信息层级怎么排',
+      summary: '同一张图，卖点顺序错了转化就差一截。拆解「痛点—证据—行动」三段式在长图里怎么落地。',
+      tags: ['电商视觉', '排版'],
+      date: '2026-10-24',
+      minutes: 8,
+      cover: 'assets/img/works/w03.jpg',
+      blocks: [
+        { t: 'p', text: '长图不是把卖点堆满，而是控制读者的注意力落点。经验是按三段推进：先让读者认出「这跟我有关」，再给「凭什么信」，最后才是「现在买」。' },
+        { t: 'h2', text: '一屏只留一个信息点' },
+        { t: 'img', src: 'assets/img/works/w03.jpg', alt: '护肤精华详情页', caption: '清透绿调强调修护感，首屏只讲一件事' },
+        { t: 'p', text: '色块分隔比分割线更有效：视觉上形成「可以停一下」的顿点，又不会把版面切碎。' },
+        { t: 'list', items: ['首屏：产品 + 一句话价值，字号最大', '第二屏：成分/参数，用对照表而不是大段文字', '第三屏：使用步骤，图多字少', '末屏：规格与购买信息，弱化但不缺席'], ordered: true },
+        { t: 'quote', text: '信息层级不是「哪个重要就放大」，而是「读者此刻需要什么」。', by: '排版笔记' },
+        { t: 'img', src: 'assets/img/works/w05.jpg', alt: '长图详情节奏', caption: '一屏一个信息点，靠留白控制节奏' }
+      ]
+    },
+    {
+      id: 'n03',
+      title: '栅格与留白：三个能立刻改掉的习惯',
+      summary: '页面看起来「差点意思」，多半不是素材不够好，而是间距不成体系。',
+      tags: ['排版', '基础'],
+      date: '2026-10-20',
+      minutes: 5,
+      cover: 'assets/img/works/w11.jpg',
+      blocks: [
+        { t: 'p', text: '留白不是剩余空间，是主动设计出来的分隔。间距一旦不成体系，再好的素材也会显得乱。' },
+        { t: 'h2', text: '一、间距只用四档' },
+        { t: 'p', text: '4 / 8 / 16 / 32。所有 margin、padding 从这四档里选，写 CSS 时不要出现 13px、23px 这种数。' },
+        { t: 'h2', text: '二、同级元素等距，跨级元素翻倍' },
+        { t: 'p', text: '标题与正文之间用 8，段落之间用 16，模块之间用 32。读者靠这个差距判断「哪些是一伙的」——这就是格式塔的接近性原则。' },
+        { t: 'h2', text: '三、焦点只能有一个' },
+        { t: 'quote', text: '如果整页都在强调，那就等于什么都没强调。', by: '格式塔 · 图形与背景' },
+        { t: 'p', text: '把次要信息降一档（字号小 0.1rem、颜色降 15% 不透明度），焦点自然浮出来，不需要加粗加色加描边。' }
+      ]
+    }
   ],
 
   /* ---------- 个人简介（内容取自个人简历 PDF） ---------- */

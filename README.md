@@ -13,6 +13,7 @@ Web station/
 ├─ detail.html             资源详情页（预览 / 下载卡 / 四个 Tab / 同类推荐）
 ├─ about.html              个人简介（简历数据驱动：时间线 / 教育 / 技能 / 荣誉）
 ├─ works.html              我的作品集（image / video / link / pdf 四种媒介 + 灯箱）
+├─ notes.html / note.html  学习笔记（列表 + 富内容正文，可内嵌可运行的 demo）
 ├─ admin/
 │  └─ upload.html          上传资源（P1：只存本机草稿，不落库）
 ├─ deploy.html             发布中心（GitHub 部署面板）
@@ -32,6 +33,8 @@ Web station/
 │     ├─ upload.js         上传页交互（本地草稿）
 │     ├─ about.js          个人简介渲染
 │     ├─ works.js          作品集渲染与灯箱
+│     ├─ notes.js          笔记列表与标签筛选
+│     ├─ note.js           笔记正文富块渲染（含 demo iframe）
 │     ├─ config.js         作品集配置（站点名、个人信息、手写作品）
 │     ├─ store.js          部署记录的 localStorage 读写
 │     ├─ site.js           作品集渲染
@@ -101,6 +104,24 @@ type: 'pdf'    → 新窗口打开
 ```
 
 现有 10 件作品图片由 `assets/img/works/` 提供，来自作品集 PDF 的图片提取（`.workbuddy/tmp` 下未保留脚本，需要重跑见提交记录）。
+
+### 学习笔记（富内容）
+
+`notes.html` 列表 + `note.html?id=` 正文。正文由 `data.js` 的 `notes[].blocks` 渲染，支持 8 种块：
+
+| t | 用途 | 关键字段 |
+| --- | --- | --- |
+| `h2` | 小标题（自动进右侧目录） | `text` |
+| `p` | 段落 | `text` |
+| `quote` | 引用 | `text` / `by` |
+| `list` | 列表 | `items[]` / `ordered` |
+| `code` | 代码块 | `lang` / `code` |
+| `img` | 图片（点击看原图） | `src` / `caption` |
+| `video` | 视频：mp4 直链内嵌播放，其它地址按 iframe 嵌入 | `src` / `poster` |
+| `demo` | **直接运行的前端效果**（iframe） | `src` / `title` / `height` |
+
+`demo` 块现在挂的是 `apps/hello-card/`（番茄钟），所以笔记里能直接操作真实页面。
+新增一篇笔记 = 往 `notes` 数组里加一条，不改代码。
 
 ### 「收藏网站」分类是链接区
 
