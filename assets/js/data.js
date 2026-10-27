@@ -45,22 +45,24 @@ window.SITE_DATA = {
     {
       title: '内容分类',
       items: [
+        /* 顺序即认知顺序：工具 → 可直接用的素材 → 学习 → 外部收藏 */
         { label: 'AI 工具', icon: 'spark', href: 'index.html?cat=ai' },
+        { label: 'Skills 技能包', icon: 'package', href: 'index.html?cat=skills' },
         { label: '设计素材', icon: 'image', href: 'index.html?cat=asset' },
         { label: '3D 素材', icon: 'box', href: 'index.html?cat=threed' },
-        { label: 'Skills 技能包', icon: 'package', href: 'index.html?cat=skills' },
-        { label: '男模审美', icon: 'male', href: 'index.html?cat=male' },
         { label: '海报与模板', icon: 'layers', href: 'index.html?cat=post' },
-        { label: '收藏网站', icon: 'link', href: 'index.html?cat=sites' },
-        { label: '学习资料', icon: 'book', href: 'index.html?cat=study' }
+        { label: '男模审美', icon: 'male', href: 'index.html?cat=male' },
+        { label: '学习资料', icon: 'book', href: 'index.html?cat=study' },
+        { label: '收藏网站', icon: 'link', href: 'index.html?cat=sites' }
       ]
     },
     {
       title: '我的',
       items: [
+        /* 由「我是谁」到「我做过什么」再到「我能做什么」 */
         { label: '个人简介', icon: 'id', href: 'about.html' },
-        { label: '上传资源', icon: 'upload', href: 'admin/upload.html' },
         { label: '我的作品集', icon: 'folder', href: 'works.html' },
+        { label: '上传资源', icon: 'upload', href: 'admin/upload.html' },
         { label: '发布中心', icon: 'rocket', href: 'deploy.html' }
       ]
     }

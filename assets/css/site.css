@@ -1048,48 +1048,18 @@ body.side-collapsed .side-inner { display: none; }
 .toast i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 
 /* 10 页脚：名片式联系方式 ------------------------------------------------ */
-.site-foot { margin-top: 44px; }
+/* 页脚刻意做「轻」：不套卡片、不加底纹和水印，只用一条分隔线落在内容流末尾 */
+.site-foot {
+  margin-top: 36px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
 
 .contact-card {
-  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 30px;
-  padding: 24px 26px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  background:
-    radial-gradient(78% 130% at 100% 0%, var(--accent-soft), transparent 58%),
-    linear-gradient(180deg, var(--surface), var(--bg-elev));
-}
-
-/* 中部留白处放一个低透明度 Q 水印，填空间同时强化品牌，不加多余文字 */
-.contact-card::after {
-  content: "Q";
-  position: absolute;
-  right: 190px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--sans);
-  font-size: clamp(120px, 13vw, 180px);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  color: var(--accent);
-  opacity: .055;
-  pointer-events: none;
-  user-select: none;
-}
-
-/* 顶部发丝线 + 右侧酸光，给平面色块一点纵深 */
-.contact-card::before {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; top: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-line) 45%, transparent);
+  gap: 26px;
 }
 
 .contact-main {
@@ -1100,22 +1070,20 @@ body.side-collapsed .side-inner { display: none; }
 }
 
 .avatar {
-  width: 62px; height: 62px;
+  width: 46px; height: 46px;
   flex: none;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  border: 1px solid var(--accent-line);
-  background: radial-gradient(120% 120% at 30% 18%, #3a3f41, #141516 70%);
-  box-shadow: inset 0 0 0 4px rgba(0, 0, 0, .28), 0 8px 20px -12px #000;
-  color: var(--accent-text);
-  font-size: 1.4rem;
+  border: 1px solid var(--line-2);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: 0;
   overflow: hidden;
 }
 
-[data-theme="light"] .avatar { background: radial-gradient(120% 120% at 30% 18%, #ffffff, #e9e9e3 70%); box-shadow: inset 0 0 0 4px rgba(0, 0, 0, .04); }
+[data-theme="light"] .avatar { background: var(--surface-2); }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
 .ident { min-width: 0; }
@@ -1123,92 +1091,88 @@ body.side-collapsed .side-inner { display: none; }
 .ident-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
 .ident-name {
-  font-size: 1.32rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 .ident-role {
-  padding: 2px 8px;
-  border: 1px solid var(--accent-line);
-  border-radius: 4px;
-  background: var(--accent-soft);
-  color: var(--accent-text);
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: .01em;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 500;
   white-space: nowrap;
 }
 
+.ident-role::before {
+  content: "·";
+  margin-right: 7px;
+  color: var(--line-2);
+}
+
 .ident-org {
-  margin-top: 5px;
-  font-size: .8rem;
+  margin-top: 3px;
+  font-size: .76rem;
   color: var(--muted);
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* 第二栏：联系方式横排，靠左侧发丝线与身份区分（不要用 1fr 网格，会把两项拉得很散） */
 .contact-rows {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px 26px;
-  padding-left: 30px;
-  border-left: 1px solid var(--line);
+  gap: 6px 18px;
+  margin-top: 7px;
   min-width: 0;
 }
 
 .contact-row {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: .8rem;
-  color: var(--ink-2);
+  gap: 5px;
+  font-size: .76rem;
+  color: var(--muted);
   transition: color .15s;
 }
 
-.contact-row svg { width: 14px; height: 14px; color: var(--muted); transition: color .15s; }
+.contact-row svg { width: 12px; height: 12px; color: var(--line-2); transition: color .15s; }
 .contact-row:hover { color: var(--accent-text); }
 .contact-row:hover svg { color: var(--accent-text); }
 
 .contact-qr {
-  padding-left: 26px;
-  border-left: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   flex: none;
+  justify-self: end;
 }
 
 .qr-box {
   background: #fff;
-  padding: 7px;
-  border-radius: 8px;
-  box-shadow: 0 10px 22px -14px #000, 0 0 0 1px rgba(255, 255, 255, .08);
+  padding: 5px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
 }
-.qr-box img { width: 84px; height: 84px; display: block; image-rendering: pixelated; }
+.qr-box img { width: 58px; height: 58px; display: block; image-rendering: pixelated; }
 
 .qr-label {
   font-family: var(--mono);
-  font-size: .62rem;
-  letter-spacing: .12em;
+  font-size: .58rem;
+  letter-spacing: .1em;
   color: var(--muted);
-  text-transform: uppercase;
 }
 
 .foot-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px 20px;
+  gap: 10px 20px;
   flex-wrap: wrap;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
-  font-size: .72rem;
+  margin-top: 18px;
+  font-size: .7rem;
   color: var(--muted);
+  opacity: .85;
 }
 
 .foot-links { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -1623,22 +1587,11 @@ body.side-collapsed .side-inner { display: none; }
   .uploads { grid-template-columns: repeat(2, 1fr); }
   .subbar { padding: 0 14px; height: 34px; }
   .to-top { right: 14px; bottom: 16px; width: 38px; height: 38px; }
-  .contact-card { grid-template-columns: 1fr; gap: 14px; padding: 18px; }
-  .contact-card::after { display: none; }
-  .contact-rows { padding-left: 0; border-left: 0; padding-top: 13px; border-top: 1px dashed var(--line); }
+  .contact-card { grid-template-columns: auto minmax(0, 1fr); gap: 14px; }
+  .contact-qr { grid-column: 1 / -1; justify-self: start; flex-direction: row; align-items: center; gap: 10px; }
   .avatar { width: 52px; height: 52px; font-size: 1.15rem; }
   .ident-name { font-size: 1.12rem; }
-  .contact-qr {
-    padding-left: 0;
-    padding-top: 14px;
-    border-left: 0;
-    border-top: 1px solid var(--line);
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-  }
-  .qr-box img { width: 64px; height: 64px; }
+  .qr-box img { width: 52px; height: 52px; }
 }
 
 @media (max-width: 460px) {
