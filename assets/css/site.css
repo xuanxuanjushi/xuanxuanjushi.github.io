@@ -1827,11 +1827,11 @@ body.side-collapsed .side-inner { display: none; }
    避免「正文 640 / 列 850 / 目录在最右边」造成的三段式空档 */
 .article-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 272px;
-  gap: 44px;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 48px;
   align-items: start;
-  max-width: 980px;
-  margin: 0 auto;
+  max-width: 1180px;
+  margin: 0 auto;          /* 整组在内容区居中 */
   padding-top: 22px;
 }
 
