@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>上传资源 · 后台</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23e2ff1a'/><rect x='11' y='11' width='10' height='10' rx='2' fill='%230d1000'/></svg>">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="icon-btn" type="button" data-side-toggle aria-label="切换侧栏" title="切换侧栏">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <a class="logo" href="../index.html">
+    <span class="logo-mark" aria-hidden="true"></span>
+    <span class="logo-text" data-site-name>覃露雨的闺房</span>
+  </a>
+  <div class="search" style="flex:1;max-width:520px;margin:0 auto">
+    <span class="mono" style="margin:0 auto">后台 · 上传资源</span>
+  </div>
+  <div class="top-actions">
+    <a class="btn sm ghost" href="../index.html"><span>返回前台</span></a>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="切换深浅色" title="切换深浅色">◐</button>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" aria-label="后台导航">
+    <div class="side-inner" data-sidebar></div>
+  </aside>
+
+  <main class="content">
+    <div class="content-inner">
+
+      <div class="admin-head">
+        <div>
+          <h1>上传资源</h1>
+          <p class="sub">填写基础信息 → 上传封面与预览图 → 保存草稿或直接发布。带 <span style="color:var(--accent-text)">*</span> 为必填。</p>
+        </div>
+        <div class="admin-actions">
+          <button class="btn" type="button" id="btnDraft">保存草稿</button>
+          <button class="btn acid" type="button" id="btnPublish">发布资源</button>
+        </div>
+      </div>
+
+      <div class="upload-grid">
+
+        <!-- 左：表单 -->
+        <div>
+          <section class="panel">
+            <div class="panel-head"><h2>基础信息</h2><span class="tip">前台卡片与详情页头部都用这里的字段</span></div>
+            <div class="panel-body">
+              <div class="field">
+                <label for="fTitle">标题<span class="req">*</span></label>
+                <input class="input" id="fTitle" type="text" maxlength="40" placeholder="例如：中式海报工作台">
+                <span class="hint">建议 8–20 字，讲清「是什么」而不是「多厉害」。</span>
+              </div>
+
+              <div class="field">
+                <label for="fSub">一句话副标题</label>
+                <input class="input" id="fSub" type="text" maxlength="60" placeholder="例如：21 套版式 + 宣纸纹理 + 印章组件，可导出 300dpi">
+                <span class="hint">会显示在标题下方，最多两行。</span>
+              </div>
+
+              <div class="row-3">
+                <div class="field">
+                  <label for="fCat">分类<span class="req">*</span></label>
+                  <select class="input" id="fCat"></select>
+                </div>
+                <div class="field">
+                  <label for="fVer">版本号</label>
+                  <input class="input" id="fVer" type="text" placeholder="v1.0.0">
+                </div>
+                <div class="field">
+                  <label for="fBadge">角标</label>
+                  <select class="input" id="fBadge">
+                    <option value="">无</option>
+                    <option value="新品">新品</option>
+                    <option value="热销">热销</option>
+                    <option value="会员">会员</option>
+                    <option value="合集">合集</option>
+                    <option value="免费">免费</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row-2">
+                <div class="field">
+                  <label for="fAuthor">作者</label>
+                  <input class="input" id="fAuthor" type="text" placeholder="覃露雨">
+                </div>
+                <div class="field">
+                  <label for="fCode">资源编号</label>
+                  <input class="input" id="fCode" type="text" placeholder="自动生成">
+                  <span class="hint">留空则按「分类-日期」自动生成。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><h2>价格与授权</h2></div>
+            <div class="panel-body">
+              <div class="row-2">
+                <div class="field">
+                  <label for="fPrice">价格（元）</label>
+                  <input class="input" id="fPrice" type="number" min="0" step="1" placeholder="0">
+                  <span class="hint">填 0 或勾选下方免费开关即为免费资源。</span>
+                </div>
+                <div class="field">
+                  <label>获取方式</label>
+                  <label class="switch"><input type="checkbox" id="fFree"> 免费资源（无需付费）</label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="fLicense">授权条款</label>
+                <textarea class="textarea" id="fLicense" placeholder="可用于个人与商业项目；不可转售源文件，不可作为模板合集二次分发。"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><h2>详情内容</h2><span class="tip">对应详情页的「资产说明」与「安装指南」两个 Tab</span></div>
+            <div class="panel-body">
+              <div class="field">
+                <label for="fDesc">资产说明</label>
+                <textarea class="textarea" id="fDesc" style="min-height:110px" placeholder="这套资源解决什么问题、包含什么、和同类相比差在哪。三段以内说清。"></textarea>
+              </div>
+              <div class="field">
+                <label for="fInstall">安装 / 使用说明</label>
+                <textarea class="textarea" id="fInstall" placeholder="软件版本要求、解压后目录结构、字体缺失怎么处理。"></textarea>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- 右：上传区 -->
+        <div>
+          <section class="panel">
+            <div class="panel-head"><h2>封面与预览图</h2><span class="tip">第一张作封面</span></div>
+            <div class="panel-body">
+              <div class="dropzone" id="dz" role="button" tabindex="0" aria-label="上传图片">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7.5 8.5 12 4l4.5 4.5M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></svg>
+                <strong>拖入图片，或点击选择</strong>
+                <span>建议 1600×1000 以上，JPEG / PNG / WebP，单张 ≤ 5MB</span>
+              </div>
+              <input type="file" id="fileInput" accept="image/*" multiple hidden>
+              <div class="uploads" id="uploads"></div>
+              <span class="hint">最多 6 张；第一张自动作为列表封面，其余进入详情页预览条。</span>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><h2>资源文件</h2><span class="tip">暂存，不真正上传</span></div>
+            <div class="panel-body">
+              <div class="field" style="margin-bottom:0">
+                <label for="pkgInput">工程文件 / 压缩包</label>
+                <input class="input" id="pkgInput" type="file" style="padding:6px 8px;height:auto">
+                <span class="hint" id="pkgHint">未选择文件。上传后前台会显示文件大小与格式。</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><h2>提交前确认</h2></div>
+            <div class="panel-body">
+              <div class="notice" style="margin-bottom:12px">
+                <svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 7.6v.1"/></svg>
+                <span><b>当前为 P1 前端骨架</b>：后端与数据库未接，点「发布」只会把这条内容存进本机 localStorage，刷新页面后可在草稿里恢复，但不会真正出现在前台列表。</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="fAgree"> 我确认封面与素材拥有使用权</label>
+              <div style="display:flex;gap:8px;margin-top:12px">
+                <button class="btn block" type="button" id="btnPreview">预览卡片</button>
+                <button class="btn acid block" type="button" id="btnPublish2">发布</button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </div>
+
+      <footer class="foot">
+        <span>© <span data-year>2026</span> <span data-site-name>覃露雨的闺房</span></span>
+        <span class="mono">ADMIN · UPLOAD</span>
+        <div class="links">
+          <a href="../index.html">返回前台</a>
+          <a href="../works.html">作品集</a>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/upload.js"></script>
+</body>
+</html>

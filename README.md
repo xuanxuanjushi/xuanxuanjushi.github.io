@@ -1,29 +1,68 @@
-# 个人站 + 发布中心
+# 个人站 + 资源站
 
 **线上地址**：https://xuanxuanjushi.github.io/ （仓库为 `xuanxuanjushi.github.io`，Pages 自动发布 `main` 根目录）
 
-一个零依赖、零构建的个人作品集站点，内置「把网页应用部署到 GitHub Pages」的能力。
-纯静态：`index.html` 双击就能看，扔到任何静态托管都能跑。
+两套并存的形态：
+
+- **资源站（新，P1）**：`index.html` 列表 + `detail.html` 详情 + `admin/upload.html` 上传后台。全屏宽版布局，深色 + 酸性黄绿，数据来自 `assets/js/data.js`（假数据，后端未接）。
+- **作品集 + 发布中心（原有）**：`works.html` 作品集、`deploy.html` 用浏览器把网页应用部署到 GitHub Pages。零依赖零构建。
 
 ```
 Web station/
-├─ index.html              首页（作品集 / 关于 / 联系）
+├─ index.html              ★ 资源列表页（顶栏 + 侧栏 + 瀑布流网格）
+├─ detail.html             资源详情页（预览 / 购买卡 / 四个 Tab / 同类推荐）
+├─ admin/
+│  └─ upload.html          上传资源（P1：只存本机草稿，不落库）
+├─ works.html              旧首页：个人作品集（沿用 style.css）
 ├─ deploy.html             发布中心（GitHub 部署面板）
-├─ test.html               自测入口（假 GitHub API 驱动真实部署流程）
+├─ test.html               发布流程自测（假 GitHub API 驱动真实 UI）
 ├─ start.bat               Windows 一键本地预览（127.0.0.1:5173）
 ├─ assets/
-│  ├─ css/style.css        全站样式（含深浅色变量）
+│  ├─ css/
+│  │  ├─ site.css          ★ 资源站样式（外壳 / 列表 / 详情 / 后台）
+│  │  └─ style.css         作品集样式（works.html 专用，两者互不影响）
+│  ├─ img/covers/          占位封面（p01–p18，见下方版权说明）
 │  └─ js/
-│     ├─ config.js         ★ 唯一需要手改的文件：个人信息与手写作品
-│     ├─ store.js          部署记录的 localStorage 读写（唯一入口）
-│     ├─ site.js           首页渲染
+│     ├─ data.js           ★ 资源站数据：站点信息 / 导航 / 分类 / 18 件资源
+│     ├─ app.js            公共层：图标、主题、侧栏、卡片渲染、收藏、Toast
+│     ├─ list.js           列表页：筛选 / 搜索 / 排序 / 加载更多
+│     ├─ detail.js         详情页渲染
+│     ├─ upload.js         上传页交互（本地草稿）
+│     ├─ config.js         作品集配置（站点名、个人信息、手写作品）
+│     ├─ store.js          部署记录的 localStorage 读写
+│     ├─ site.js           作品集渲染
 │     └─ deploy.js         发布中心：GitHub API 封装与部署流程
 └─ apps/hello-card/        可直接部署的示例应用（单文件番茄钟）
 ```
 
+## 0. 资源站（P1）
+
+### 页面与分工
+
+| 页面 | 内容 | 数据来源 |
+| --- | --- | --- |
+| `index.html` | 顶栏（logo / 搜索 / 会员 / 登录）、可折叠侧栏、分类 chips、卡片网格、加载更多 | `data.js` → `list.js` |
+| `detail.html?id=` | 面包屑、标题、元信息（版本/作者/更新/编号）、大图 + 缩略图、右侧获取卡、四个 Tab、同类推荐 | `data.js` → `detail.js` |
+| `admin/upload.html` | 基础信息、价格与授权、详情内容、封面多图上传、资源文件 | `upload.js`（本地草稿） |
+
+URL 参数即状态：`?cat=ai`、`?q=海报`、`?fav=1` 都能直接分享/刷新复现。
+
+### ⚠ 封面图的版权
+
+`assets/img/covers/` 内 18 张图抓取自竞品站点，**仅用于版式占位**，版权属原权利人。
+正式对外运营前必须逐条替换为自有图片（或停用），替换时把 `data.js` 里 `cover` / `gallery` 的短键
+（如 `'p01'`）换成完整路径（如 `'assets/img/covers/my-cover.jpg'`）即可，渲染层两种都支持。
+
+### 还没做的（P2 / P3）
+
+- **P2 后端**：登录、项目表、文件存储、上传接口、分类管理后台
+- **P3 打通**：列表/详情改读接口、搜索结果落库、收藏与下载记录
+
+当前登录、购买、上传都只给前端反馈（`App.toast` 提示），不要误以为已经可用。
+
 ---
 
-## 1. 改自己的信息
+## 1. 改自己的信息（作品集）
 
 只动 `assets/js/config.js`：
 

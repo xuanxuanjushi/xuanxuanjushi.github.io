@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>资源详情 · 覃露雨的闺房</title>
+<meta name="description" content="资源详情：预览、说明、安装指南与授权条款。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23e2ff1a'/><rect x='11' y='11' width='10' height='10' rx='2' fill='%230d1000'/></svg>">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="icon-btn" type="button" data-side-toggle aria-label="切换侧栏" title="切换侧栏">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <a class="logo" href="index.html">
+    <span class="logo-mark" aria-hidden="true"></span>
+    <span class="logo-text" data-site-name>覃露雨的闺房</span>
+  </a>
+  <form class="search" data-search-form role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4.3-4.3"/></svg>
+    <input type="search" placeholder="搜索资源、工具、分类…" autocomplete="off" aria-label="搜索">
+    <kbd>/</kbd>
+  </form>
+  <div class="top-actions">
+    <a class="btn sm acid" href="#" data-need-login><span>会员中心</span></a>
+    <a class="btn sm ghost" href="#" data-need-login><span>登录 / 注册</span></a>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="切换深浅色" title="切换深浅色">◐</button>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" aria-label="侧栏导航">
+    <div class="side-inner" data-sidebar></div>
+  </aside>
+
+  <main class="content">
+    <div class="content-inner">
+
+      <nav class="crumbs" id="crumbs" aria-label="面包屑"></nav>
+
+      <div class="detail-head">
+        <h1 id="title">加载中…</h1>
+        <p class="sub" id="subtitle"></p>
+        <div class="meta-row" id="meta"></div>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <section class="preview">
+            <div class="preview-main"><img id="mainImg" alt="资源预览"></div>
+            <div class="preview-bar">
+              <div class="thumbs" id="thumbs"></div>
+              <span class="hint" id="previewHint"></span>
+            </div>
+          </section>
+
+          <section class="tabs">
+            <div class="tab-bar" role="tablist">
+              <button class="tab on" type="button" data-tab="desc" role="tab">资产说明</button>
+              <button class="tab" type="button" data-tab="gallery" role="tab">内容预览</button>
+              <button class="tab" type="button" data-tab="install" role="tab">安装指南</button>
+              <button class="tab" type="button" data-tab="license" role="tab">授权与使用</button>
+            </div>
+            <div class="tab-panel on" id="panel-desc" role="tabpanel"></div>
+            <div class="tab-panel" id="panel-gallery" role="tabpanel"></div>
+            <div class="tab-panel" id="panel-install" role="tabpanel"></div>
+            <div class="tab-panel" id="panel-license" role="tabpanel"></div>
+          </section>
+        </div>
+
+        <aside id="buyHost"></aside>
+      </div>
+
+      <section class="related">
+        <div class="related-head">
+          <h3>同类推荐</h3>
+          <a href="index.html" id="moreLink">查看全部 →</a>
+        </div>
+        <div class="grid-cards" id="related"></div>
+      </section>
+
+      <footer class="foot">
+        <span>© <span data-year>2026</span> <span data-site-name>覃露雨的闺房</span></span>
+        <span class="mono">P1 · 前端骨架 / 假数据</span>
+        <div class="links">
+          <a href="index.html">返回列表</a>
+          <a href="works.html">我的作品集</a>
+          <a href="admin/upload.html">上传资源</a>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/detail.js"></script>
+</body>
+</html>
