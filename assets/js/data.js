@@ -40,8 +40,8 @@ window.SITE_DATA = {
     {
       title: '',
       items: [
+        /* 「首页」就是资源列表页本身，不再单列一个「所有资源」，否则两项指同一页面 */
         { label: '首页', icon: 'home', href: 'index.html', active: true },
-        { label: '所有资源', icon: 'grid', href: 'index.html' },
         { label: '我的收藏', icon: 'star', href: 'index.html?fav=1' }
       ]
     },
