@@ -1743,42 +1743,45 @@ body.side-collapsed .side-inner { display: none; }
 .lb-close:hover { background: var(--danger); border-color: var(--danger); color: #fff; }
 
 /* 10.7 学习笔记：列表 ---------------------------------------------------- */
+/* 竖版卡片：封面固定 16:10，正文在下方。
+   横版卡（封面 | 文字）在宽屏下会把文字列压到几十像素，且整行被最高的一张撑出空档。 */
 .notes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
-  gap: 14px;
+  /* auto-fit 而非 auto-fill：条目少时不会留下空轨道，卡片会撑满整行 */
+  grid-template-columns: repeat(auto-fit, minmax(286px, 1fr));
+  gap: 16px;
+  align-items: stretch;   /* 同一行卡片等高，卡片内部再用 margin-top:auto 把页脚压到底 */
 }
 
 .note-card {
-  display: grid;
-  grid-template-columns: 168px minmax(0, 1fr);
-  gap: 0;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--line);
   border-radius: var(--r);
   background: var(--surface);
   overflow: hidden;
-  transition: border-color .16s, transform .16s, box-shadow .16s, background .16s;
+  transition: border-color .16s, transform .16s, box-shadow .16s;
 }
 .note-card:hover {
   border-color: var(--line-2);
-  background: var(--surface-2);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-lift);
 }
 
 .note-cover {
   position: relative;
   display: block;
-  min-height: 120px;
+  aspect-ratio: 16 / 10;
   background: var(--surface-3);
   overflow: hidden;
+  flex: none;
 }
-.note-cover img { width: 100%; height: 100%; object-fit: cover; opacity: .9; transition: transform .4s; }
+.note-cover img { width: 100%; height: 100%; object-fit: cover; opacity: .92; transition: transform .4s; }
 .note-card:hover .note-cover img { transform: scale(1.04); }
 
 .note-date {
   position: absolute;
-  left: 8px; top: 8px;
+  left: 9px; top: 9px;
   font-family: var(--mono);
   font-size: .62rem;
   color: #fff;
@@ -1789,13 +1792,13 @@ body.side-collapsed .side-inner { display: none; }
   backdrop-filter: blur(4px);
 }
 
-.note-main { display: flex; flex-direction: column; gap: 6px; padding: 13px 15px; min-width: 0; }
+.note-main { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px 13px; min-width: 0; flex: 1; }
 
 .note-title {
-  font-size: .92rem;
+  font-size: .9rem;
   font-weight: 600;
   color: var(--ink);
-  line-height: 1.4;
+  line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -1803,7 +1806,7 @@ body.side-collapsed .side-inner { display: none; }
 }
 
 .note-summary {
-  font-size: .78rem;
+  font-size: .77rem;
   color: var(--muted);
   line-height: 1.65;
   display: -webkit-box;
@@ -1817,10 +1820,10 @@ body.side-collapsed .side-inner { display: none; }
   align-items: center;
   gap: 5px;
   margin-top: auto;
-  padding-top: 8px;
+  padding-top: 9px;
   border-top: 1px solid var(--line);
 }
-.note-min { margin-left: auto; font-family: var(--mono); font-size: .64rem; color: var(--muted); }
+.note-min { margin-left: auto; font-family: var(--mono); font-size: .63rem; color: var(--muted); white-space: nowrap; }
 
 /* 10.8 学习笔记：正文 ---------------------------------------------------- */
 /* 阅读区与目录当成一组：整组定宽居中，正文列宽 = 正文测量宽，
@@ -2144,7 +2147,6 @@ body.side-collapsed .side-inner { display: none; }
   .buy-body .btn.acid { white-space: nowrap; }
   .contact-card { grid-template-columns: auto minmax(0, 1fr); gap: 14px; }
   .notes-grid { grid-template-columns: 1fr; }
-  .note-card { grid-template-columns: 112px minmax(0, 1fr); }
   .article-grid { grid-template-columns: 1fr; gap: 18px; max-width: none; margin: 0; }
   .article-side { order: 2; }
   .article-head h1 { font-size: 1.4rem; }
