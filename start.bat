@@ -4,22 +4,26 @@ cd /d "%~dp0"
 set "PORT=5173"
 
 echo.
-echo   个人站本地预览  http://localhost:%PORT%/
-echo   发布中心        http://localhost:%PORT%/deploy.html
+echo   个人站本地预览  http://127.0.0.1:%PORT%/
+echo   发布中心        http://127.0.0.1:%PORT%/deploy.html
 echo   按 Ctrl+C 停止服务
 echo.
+echo   注意：如果浏览器打不开并报 502 / 无法连接，是系统代理接管了 localhost。
+echo   两个办法：① 直接用 127.0.0.1 访问（下方已自动打开）
+echo             ② 在代理软件里把 localhost,127.0.0.1,::1 加入直连/绕过列表
+echo.
 
-start "" "http://localhost:%PORT%/"
+start "" "http://127.0.0.1:%PORT%/"
 
 where python >nul 2>nul
 if %errorlevel%==0 (
-  python -m http.server %PORT% --bind 127.0.0.1
+  python -m http.server %PORT% --bind 0.0.0.0
   goto :eof
 )
 
 where py >nul 2>nul
 if %errorlevel%==0 (
-  py -m http.server %PORT% --bind 127.0.0.1
+  py -m http.server %PORT% --bind 0.0.0.0
   goto :eof
 )
 
