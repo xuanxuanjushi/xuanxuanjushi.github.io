@@ -1,5 +1,7 @@
 # 个人站 + 发布中心
 
+**线上地址**：https://xuanxuanjushi.github.io/ （仓库为 `xuanxuanjushi.github.io`，Pages 自动发布 `main` 根目录）
+
 一个零依赖、零构建的个人作品集站点，内置「把网页应用部署到 GitHub Pages」的能力。
 纯静态：`index.html` 双击就能看，扔到任何静态托管都能跑。
 
