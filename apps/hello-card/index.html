@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>番茄钟 · 专注 25 分钟</title>
+<meta name="description" content="单文件番茄工作法计时器，无依赖，可离线使用。">
+<style>
+  :root{
+    --bg:#12141a; --card:#1a1e26; --line:#2a303b;
+    --ink:#eef1f6; --dim:#9aa3b1; --accent:#5fd0b0; --accent-2:#f0b062;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; display:grid; place-items:center; padding:24px;
+    background:radial-gradient(120% 100% at 50% 0%, #1d2430 0%, var(--bg) 62%);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  .app{width:100%; max-width:380px; text-align:center}
+  .brand{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--dim); font-family:ui-monospace,Menlo,Consolas,monospace;
+  }
+  .brand i{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(95,208,176,.14)}
+
+  .dial{position:relative; margin:26px auto 0; width:280px; height:280px}
+  .dial svg{transform:rotate(-90deg)}
+  .track{fill:none; stroke:var(--line); stroke-width:10}
+  .bar{fill:none; stroke:var(--accent); stroke-width:10; stroke-linecap:round; transition:stroke-dashoffset .35s linear, stroke .25s}
+
+  .readout{position:absolute; inset:0; display:grid; place-content:center; gap:6px}
+  .time{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:3.2rem; font-weight:600; letter-spacing:-.02em; font-variant-numeric:tabular-nums;
+  }
+  .phase{font-size:.8rem; letter-spacing:.12em; text-transform:uppercase; color:var(--dim)}
+  .rounds{font-size:.78rem; color:var(--dim); margin-top:2px}
+
+  .controls{display:flex; gap:10px; justify-content:center; margin-top:26px}
+  button{
+    font:inherit; cursor:pointer; border-radius:999px; border:1px solid var(--line);
+    background:var(--card); color:var(--ink); height:44px; padding:0 22px;
+    transition:background .18s,border-color .18s,transform .12s;
+  }
+  button:hover{background:#222836; border-color:#39424f}
+  button:active{transform:translateY(1px)}
+  button.primary{background:var(--accent); border-color:var(--accent); color:#08221b; font-weight:600; min-width:120px}
+  button.primary:hover{filter:brightness(1.07); background:var(--accent)}
+  button.ghost{width:44px; padding:0}
+
+  .hint{margin-top:22px; font-size:.76rem; color:var(--dim); line-height:1.7}
+  kbd{
+    font-family:ui-monospace,Menlo,monospace; font-size:.72rem; padding:1px 6px;
+    border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; background:var(--card);
+  }
+  body.break .bar{stroke:var(--accent-2)}
+  body.break .brand i{background:var(--accent-2); box-shadow:0 0 0 4px rgba(240,176,98,.14)}
+</style>
+</head>
+<body>
+<main class="app">
+  <span class="brand"><i></i> Pomodoro · 单文件</span>
+
+  <div class="dial">
+    <svg width="280" height="280" viewBox="0 0 280 280" aria-hidden="true">
+      <circle class="track" cx="140" cy="140" r="126"></circle>
+      <circle class="bar" id="bar" cx="140" cy="140" r="126"
+              stroke-dasharray="791.7" stroke-dashoffset="0"></circle>
+    </svg>
+    <div class="readout">
+      <div class="time" id="time" role="timer" aria-live="off">25:00</div>
+      <div class="phase" id="phase">专注</div>
+      <div class="rounds" id="rounds">已完成 0 个番茄</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="toggle">开始</button>
+    <button class="ghost" id="reset" title="重置（R）" aria-label="重置">↺</button>
+  </div>
+
+  <p class="hint">
+    <kbd>Space</kbd> 开始 / 暂停 · <kbd>R</kbd> 重置<br>
+    专注 25 分钟，休息 5 分钟，每 4 个番茄长休 15 分钟。
+  </p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var FOCUS = 25 * 60, SHORT = 5 * 60, LONG = 15 * 60;
+  var CIRC = 2 * Math.PI * 126;
+
+  var el = {
+    bar: document.getElementById('bar'),
+    time: document.getElementById('time'),
+    phase: document.getElementById('phase'),
+    rounds: document.getElementById('rounds'),
+    toggle: document.getElementById('toggle'),
+    reset: document.getElementById('reset')
+  };
+
+  var st = { mode: 'focus', left: FOCUS, total: FOCUS, running: false, done: 0, timer: null };
+
+  el.bar.setAttribute('stroke-dasharray', CIRC.toFixed(1));
+
+  function fmt(s) {
+    var m = Math.floor(s / 60), sec = s % 60;
+    return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+  }
+
+  function paint() {
+    el.time.textContent = fmt(st.left);
+    el.phase.textContent = st.mode === 'focus' ? '专注' : (st.mode === 'long' ? '长休息' : '休息');
+    el.rounds.textContent = '已完成 ' + st.done + ' 个番茄';
+    el.bar.style.strokeDashoffset = (CIRC * (1 - st.left / st.total)).toFixed(1);
+    el.toggle.textContent = st.running ? '暂停' : (st.left === st.total ? '开始' : '继续');
+    document.body.classList.toggle('break', st.mode !== 'focus');
+    document.title = (st.running ? fmt(st.left) + ' · ' : '') + (st.mode === 'focus' ? '专注' : '休息') + ' · 番茄钟';
+  }
+
+  function next() {
+    if (st.mode === 'focus') {
+      st.done += 1;
+      st.mode = st.done % 4 === 0 ? 'long' : 'short';
+      st.total = st.mode === 'long' ? LONG : SHORT;
+    } else {
+      st.mode = 'focus';
+      st.total = FOCUS;
+    }
+    st.left = st.total;
+    chime();
+    notify();
+  }
+
+  function tick() {
+    if (st.left > 0) { st.left -= 1; paint(); return; }
+    next();
+    paint();
+  }
+
+  function start() {
+    if (st.running) return;
+    st.running = true;
+    st.timer = setInterval(tick, 1000);
+    paint();
+  }
+
+  function pause() {
+    st.running = false;
+    clearInterval(st.timer);
+    paint();
+  }
+
+  function reset() {
+    pause();
+    st.mode = 'focus';
+    st.total = FOCUS;
+    st.left = FOCUS;
+    st.done = 0;
+    paint();
+  }
+
+  // 用 WebAudio 生成两声提示音，避免引入音频文件
+  function chime() {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      var ctx = new Ctx();
+      [880, 1180].forEach(function (freq, i) {
+        var osc = ctx.createOscillator(), gain = ctx.createGain();
+        osc.type = 'sine'; osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime + i * 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.16, ctx.currentTime + i * 0.18 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + i * 0.18 + 0.5);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(ctx.currentTime + i * 0.18);
+        osc.stop(ctx.currentTime + i * 0.18 + 0.55);
+      });
+      setTimeout(function () { ctx.close(); }, 1600);
+    } catch (e) { /* 静音不影响计时 */ }
+  }
+
+  function notify() {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    try {
+      new Notification(st.mode === 'focus' ? '休息结束，回到专注' : '专注结束，休息一下', {
+        body: '已完成 ' + st.done + ' 个番茄'
+      });
+    } catch (e) {}
+  }
+
+  el.toggle.addEventListener('click', function () {
+    if (st.running) { pause(); return; }
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission().catch(function () {});
+    }
+    start();
+  });
+
+  el.reset.addEventListener('click', reset);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.code === 'Space') { e.preventDefault(); st.running ? pause() : start(); }
+    if (e.key === 'r' || e.key === 'R') reset();
+  });
+
+  paint();
+})();
+</script>
+</body>
+</html>

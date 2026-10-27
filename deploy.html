@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>发布中心 · 把网页应用部署到 GitHub Pages</title>
+<meta name="description" content="在浏览器里把本地网页应用推送到 GitHub 仓库，并开启 GitHub Pages 生成在线地址。">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231f6f5c'/><path d='M10 21l6-10 6 10z' fill='%23faf8f4'/></svg>">
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-dot" aria-hidden="true"></span>
+      <span>发布中心</span>
+    </a>
+    <nav class="nav-links" aria-label="主导航">
+      <a href="index.html">← 返回首页</a>
+      <a href="index.html#works">作品</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换深浅色" title="切换深浅色">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="eyebrow"><i aria-hidden="true"></i> Deploy · GitHub Pages</span>
+      <h1>把网页应用送上 GitHub</h1>
+      <p>
+        选择本地文件夹（或站内示例）→ 填写目标仓库 → 一次提交推送，并自动开启 GitHub Pages。
+        全流程在你的浏览器里直连 GitHub API，没有中间服务器，代码不经过任何第三方。
+      </p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="deploy-grid">
+
+      <!-- 左列 -->
+      <div>
+        <!-- 步骤 1：授权 -->
+        <section class="panel" style="margin-bottom:22px">
+          <div class="panel-head">
+            <span class="step-no">1</span>
+            <h2>连接 GitHub</h2>
+            <span class="badge-live" id="authState" style="margin-left:auto;display:none"><i></i>已连接</span>
+          </div>
+          <div class="panel-body">
+            <div class="field">
+              <label for="token">Personal Access Token</label>
+              <input class="input mono-input" id="token" type="password" autocomplete="off" spellcheck="false"
+                     placeholder="ghp_xxxxxxxxxxxx 或 github_pat_xxxx">
+              <span class="hint">
+                建议用 <b>classic token</b>，勾选 <code>repo</code> 权限即可。
+                在 GitHub → Settings → Developer settings → Personal access tokens 生成。
+                令牌只存在当前标签页的 sessionStorage（关页即失效），仅发送到 <code>api.github.com</code>。
+              </span>
+            </div>
+            <div class="field">
+              <label for="owner">账号 / 组织</label>
+              <input class="input mono-input" id="owner" type="text" autocomplete="off" spellcheck="false" placeholder="点击右侧按钮自动获取">
+              <span class="hint">
+                <button class="btn sm" id="btnVerify" type="button" style="margin-top:6px">验证令牌并读取账号</button>
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 步骤 2：文件 -->
+        <section class="panel" style="margin-bottom:22px">
+          <div class="panel-head">
+            <span class="step-no">2</span>
+            <h2>选择应用文件</h2>
+            <button class="btn sm" id="btnClearFiles" type="button" style="margin-left:auto">清空</button>
+          </div>
+          <div class="panel-body">
+            <div class="drop" id="dropZone" role="button" tabindex="0" aria-label="拖入文件夹或点击选择">
+              <strong>拖入应用文件夹</strong>
+              <span>也可以点击这里选择文件夹（自动忽略 node_modules、.git 等）</span>
+            </div>
+            <input type="file" id="dirInput" webkitdirectory directory multiple hidden>
+            <input type="file" id="fileInput" multiple hidden>
+
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+              <button class="btn sm" id="btnPickDir" type="button">选择文件夹</button>
+              <button class="btn sm" id="btnPickFiles" type="button">选择多个文件</button>
+              <button class="btn sm" id="btnLoadSample" type="button">载入站内示例</button>
+            </div>
+
+            <div class="file-list" id="fileList" aria-live="polite"></div>
+            <span class="hint" id="fileSummary">尚未选择文件。入口文件需要命名为 <code>index.html</code>，否则 Pages 打开是 404。</span>
+          </div>
+        </section>
+
+        <!-- 步骤 3：目标 -->
+        <section class="panel">
+          <div class="panel-head">
+            <span class="step-no">3</span>
+            <h2>目标仓库与选项</h2>
+          </div>
+          <div class="panel-body">
+            <div class="row-2">
+              <div class="field">
+                <label for="repo">仓库名</label>
+                <input class="input mono-input" id="repo" type="text" autocomplete="off" spellcheck="false" placeholder="my-web-app">
+                <span class="hint">不存在会自动创建。</span>
+              </div>
+              <div class="field">
+                <label for="branch">分支</label>
+                <input class="input mono-input" id="branch" type="text" value="main" spellcheck="false">
+                <span class="hint">Pages 默认发布该分支根目录。</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="prefix">发布到子目录（可选）</label>
+              <input class="input mono-input" id="prefix" type="text" spellcheck="false" placeholder="留空 = 仓库根目录">
+              <span class="hint">一个仓库放多个应用时填写，例如 <code>apps/pomodoro</code>。</span>
+            </div>
+
+            <div class="field">
+              <label for="visibility">仓库可见性</label>
+              <select class="input" id="visibility">
+                <option value="public" selected>Public（推荐，免费账号才能开 Pages）</option>
+                <option value="private">Private（Pages 需付费账号）</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="commitMsg">提交信息</label>
+              <input class="input" id="commitMsg" type="text" value="deploy: publish web app" spellcheck="false">
+            </div>
+
+            <div class="field">
+              <label class="check">
+                <input type="checkbox" id="enablePages" checked>
+                <span>推送后自动开启 GitHub Pages，并等待构建完成拿到在线地址</span>
+              </label>
+            </div>
+
+            <button class="btn accent block" id="btnDeploy" type="button" style="margin-top:18px">
+              开始部署
+            </button>
+            <span class="hint" id="deployHint">首次部署约需 30～90 秒（Pages 构建时间）。</span>
+          </div>
+        </section>
+      </div>
+
+      <!-- 右列 -->
+      <div>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>运行日志</h2>
+            <button class="btn sm" id="btnClearLog" type="button" style="margin-left:auto">清屏</button>
+          </div>
+          <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+          <pre class="log" id="log" aria-live="polite"></pre>
+          <div class="result" id="result">
+            <h3>部署成功</h3>
+            <a class="url" id="resultUrl" href="#" target="_blank" rel="noopener"></a>
+            <div class="actions">
+              <a class="btn sm" id="resultRepo" href="#" target="_blank" rel="noopener">打开仓库</a>
+              <a class="btn sm" id="resultSite" href="#" target="_blank" rel="noopener">访问站点</a>
+              <button class="btn sm" id="btnCopyJson" type="button">复制作品 JSON</button>
+              <a class="btn sm" href="index.html">回首页查看</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" style="margin-top:22px">
+          <div class="panel-head"><h2>需要知道的事</h2></div>
+          <div class="panel-body">
+            <ul class="note-list">
+              <li><b>令牌安全</b>：存在当前标签页的 sessionStorage，不写日志、不进 URL。公用电脑用完请点「断开并清除令牌」。</li>
+              <li><b>单文件上限</b>：单个文件超过 25 MB 会被跳过，图片建议先压缩。</li>
+              <li><b>构建等待</b>：Pages 首次构建通常 30～60 秒，日志会轮询状态直到 <code>built</code>。</li>
+              <li><b>更新而非覆盖</b>：再次部署同一仓库为增量提交，旧文件保留；要删除文件请直接在 GitHub 上操作。</li>
+              <li><b>回滚方式</b>：仓库的每次部署都是一个 commit，<code>git revert</code> 或 GitHub 上 revert 即可。</li>
+              <li><b>私有仓库</b>：免费账号的私有仓库不能开 Pages，日志会给出提示但不阻断推送。</li>
+            </ul>
+            <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn sm" id="btnForget" type="button">断开并清除令牌</button>
+              <button class="btn sm" id="btnClearRecords" type="button">清除本机部署记录</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© <span id="yearNow">2026</span> 个人站 · 发布中心</span>
+    <span class="mono">GitHub REST API · client-side only</span>
+    <a href="index.html" style="margin-left:auto">首页</a>
+  </div>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/deploy.js"></script>
+</body>
+</html>

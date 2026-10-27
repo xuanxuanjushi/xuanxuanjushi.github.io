@@ -1,0 +1,142 @@
+# 个人站 + 发布中心
+
+一个零依赖、零构建的个人作品集站点，内置「把网页应用部署到 GitHub Pages」的能力。
+纯静态：`index.html` 双击就能看，扔到任何静态托管都能跑。
+
+```
+Web station/
+├─ index.html              首页（作品集 / 关于 / 联系）
+├─ deploy.html             发布中心（GitHub 部署面板）
+├─ test.html               自测入口（假 GitHub API 驱动真实部署流程）
+├─ start.bat               Windows 一键本地预览（127.0.0.1:5173）
+├─ assets/
+│  ├─ css/style.css        全站样式（含深浅色变量）
+│  └─ js/
+│     ├─ config.js         ★ 唯一需要手改的文件：个人信息与手写作品
+│     ├─ store.js          部署记录的 localStorage 读写（唯一入口）
+│     ├─ site.js           首页渲染
+│     └─ deploy.js         发布中心：GitHub API 封装与部署流程
+└─ apps/hello-card/        可直接部署的示例应用（单文件番茄钟）
+```
+
+---
+
+## 1. 改自己的信息
+
+只动 `assets/js/config.js`：
+
+| 字段 | 说明 |
+| --- | --- |
+| `name` / `role` / `tagline` / `intro` | 首屏文案 |
+| `location` / `email` / `github` | 联系信息与 GitHub 用户名 |
+| `skills` | 关于页右侧的分组技能 |
+| `projects` | 手写作品卡片（部署成功的会自动追加） |
+
+`projects` 里每一项：`id`、`title`、`desc`、`tags[]`、`year`、`hue`（封面色相 0–360）、
+`path`（左上角路径标签）、`demo`（在线地址，留空则显示「未部署」）、`repo`。
+
+## 2. 本地预览
+
+双击 `start.bat`（需要 Python 3），或手动：
+
+```bash
+python -m http.server 5173 --bind 127.0.0.1
+# 打开 http://localhost:5173/
+```
+
+> 直接双击 `index.html` 也能看，但 `file://` 下浏览器会拦截 `fetch`，
+> 发布中心的「载入站内示例」会失败——拖入文件夹不受影响。
+
+## 3. 用发布中心部署一个网页应用
+
+流程：**填 Token → 选文件 → 填仓库 → 开始部署**。
+
+### 3.1 生成 Token（只需一次）
+
+GitHub → Settings → Developer settings → Personal access tokens → **Tokens (classic)**
+→ Generate new token，勾选：
+
+- `repo`（必须：建仓、推代码、开 Pages）
+- 其它勾选项都不需要
+
+把 token 贴进第一步的输入框。token 只存在当前标签页的 `sessionStorage`，
+关掉标签页即失效；点「断开并清除令牌」可立刻清空。
+
+### 3.2 选择文件
+
+三种方式，任选其一：
+
+1. **拖入文件夹**（推荐）：把应用目录整体拖进虚线框，自动去掉根目录名，
+   `index.html` 直接落在发布根。
+2. **选择文件夹 / 多个文件**：会忽略 `node_modules`、`.git`、`.vscode`、`dist`、隐藏文件、`.DS_Store`。
+3. **载入站内示例**：把 `apps/hello-card` 的番茄钟作为一条 index.html 推送，用于试跑流程。
+
+单文件超过 **25 MB** 会被跳过；入口必须是 `index.html`（否则首页 404，日志会警告）。
+
+### 3.3 目标仓库
+
+| 字段 | 说明 |
+| --- | --- |
+| 仓库名 | 不存在会自动创建；只允许字母、数字、`-` `_` `.` |
+| 分支 | 默认 `main`；仓库非空且该分支不存在时会新建分支 |
+| 子目录 | 一个仓库放多个应用时填，如 `apps/pomodoro`；留空 = 仓库根 |
+| 可见性 | 免费账号只有 **public** 仓库能开 Pages |
+| 自动开启 Pages | 勾选后推送完自动建 Pages 站点并轮询构建状态 |
+
+### 3.4 部署做了什么
+
+1. `GET /user` 校验身份，`GET /repos/{owner}/{repo}` 判断仓库是否存在，不存在则创建。
+2. 每个文件 → `POST /git/blobs`（base64）。
+3. 汇总成 tree（带 `base_tree`，保留仓库里已有文件）→ `POST /git/trees`。
+4. `POST /git/commits` 生成**单个 commit**，再 `PATCH /git/refs/heads/{branch}` 移动分支。
+5. `POST /repos/{owner}/{repo}/pages` 开启 Pages，`GET .../pages/builds/latest` 轮询到 `built`。
+6. 结果写入 `localStorage`，回首页即出现带「已上线」标记的卡片，可一键复制成 `config.js` 条目。
+
+一次部署 = 一个 commit，出问题直接 revert 即可回滚。
+
+## 4. 把这个站自己也部署上去
+
+发布中心本身就是个网页应用，用「选择文件夹」选本目录 → 仓库名如 `my-site`
+→ 推到 `main`，再到仓库 Settings → Pages 选 `main` / root，站点即上线。
+
+命令行等价操作：
+
+```bash
+git init && git add -A && git commit -m "init: personal site"
+git branch -M main
+git remote add origin https://github.com/<你>/<仓库>.git
+git push -u origin main
+```
+
+## 5. 自测
+
+打开 `test.html`（需本地服务），它会自动跑一遍部署流程：
+
+- 在隐藏 iframe 里加载**真实的** `deploy.html`，把 `fetch` 换成假的 GitHub API
+- 用真实 UI 操作（填表 → 选文件 → 点「开始部署」）驱动完整流程
+- 两个用例：**首次部署（空仓库建仓建分支）**、**增量部署（已有分支上追加提交）**
+- 断言请求序列、`base_tree` / `parents` 语义、日志、结果面板地址、本机记录写入
+- 不联网、不创建真实仓库；结束后清理测试写入的记录与令牌
+
+改动 `deploy.js` 后跑一次，21 项断言全绿再提交。
+
+## 6. 常见问题
+
+| 现象 | 原因与处理 |
+| --- | --- |
+| 401 令牌无效 | token 过期或被撤销，重新生成；注意别多复制空格 |
+| 403 权限不足 | classic token 未勾 `repo`；或触发了 API 限流，等几分钟 |
+| 404 建仓失败 | 组织仓库需要该组织的建仓权限；先在组织里给 token 授权 |
+| 422 on Pages | 私有仓库在免费账号下不能开 Pages；或仓库为空（先推一次代码） |
+| 站点 404 | 缺少 `index.html`；或访问路径不对（用了子目录时要带路径） |
+| 站点 404 但日志显示 built | Pages 首次生效有延迟，等 1 分钟；也确认 `Settings → Pages` 的 source 是 `main /` |
+| 打开是源码不是页面 | 分支/目录选错，或文件名大小写与引用不一致（Pages 区分大小写） |
+| 上传很慢 | 文件个数多时是串行请求（避免触发二级限流），大项目建议先精简产物目录 |
+
+## 7. 已知边界
+
+- 只走浏览器直连 GitHub API，因此**没有**服务端能力：不能跑构建、不能装依赖、不能做 SSR。
+  需要构建的项目请先本地 `npm run build`，再把 `dist/` 目录上传。
+- 增量部署不删文件：GitHub 上手动删除，或在本地清空仓库后重推。
+- 部署记录存在浏览器本地，换设备/清缓存就没了；重要作品请写进 `config.js`。
+- 展示层按「一个仓库 = 一个卡片」处理，子目录部署会共用同一仓库地址。

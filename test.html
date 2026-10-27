@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自测 · 部署流程</title>
+<style>
+  body{margin:0;padding:28px;font:15px/1.6 -apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       background:#faf8f4;color:#15171b}
+  h1{font-size:1.3rem;margin:0 0 6px}
+  p.sub{margin:0 0 20px;color:#6b7280;font-size:.88rem;max-width:62ch}
+  #report{background:#fff;border:1px solid #e4dfd5;border-radius:12px;padding:18px;
+           font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.9;white-space:pre-wrap}
+  #report[data-result="fail"]{border-color:#e0b4b2}
+  #frame{position:absolute;left:-3000px;top:0;width:1180px;height:1400px;border:0}
+  button{font:inherit;height:36px;padding:0 16px;border-radius:999px;border:1px solid #cfc8ba;
+         background:#fff;cursor:pointer;margin-bottom:18px}
+  button:hover{background:#f3f0e9}
+  code{background:#f3f0e9;padding:1px 5px;border-radius:4px;font-size:.85em}
+</style>
+</head>
+<body>
+<h1>部署流程自测</h1>
+<p class="sub">
+  在隐藏 iframe 里加载真实的 <code>deploy.html</code>，把 <code>fetch</code> 换成假的 GitHub API，
+  用真实 UI 操作（填表 → 选文件 → 点部署）跑完整流程。两个用例：<b>首次部署（空仓库）</b>与
+  <b>增量部署（已有分支）</b>。不联网、不创建真实仓库，结束后清空自测写入的记录。
+</p>
+<button id="run" type="button">重新运行</button>
+<pre id="report">等待自测启动…</pre>
+<iframe id="frame" title="被测页面"></iframe>
+
+<script>
+(function () {
+  'use strict';
+
+  var frame = document.getElementById('frame');
+  var reportEl = document.getElementById('report');
+  var lines = [];
+  var TOTAL = 0, FAILED = 0;
+
+  /* ==================== 报告 ==================== */
+  function out(ok, msg) {
+    TOTAL++;
+    if (!ok) FAILED++;
+    lines.push((ok ? 'PASS' : 'FAIL') + '  ' + msg);
+    reportEl.textContent = lines.join('\n');
+  }
+
+  function info(msg) {
+    lines.push('----  ' + msg);
+    reportEl.textContent = lines.join('\n');
+  }
+
+  function waitFor(fn, timeout, label) {
+    timeout = timeout || 8000;
+    return new Promise(function (resolve, reject) {
+      var t0 = Date.now();
+      (function loop() {
+        var v = false;
+        try { v = fn(); } catch (e) { v = false; }
+        if (v) return resolve(v);
+        if (Date.now() - t0 > timeout) return reject(new Error('超时等待：' + (label || '')));
+        setTimeout(loop, 60);
+      })();
+    });
+  }
+
+  /* ==================== 假 GitHub API ==================== */
+  function installFake(win, cfg) {
+    var reqs = [];
+    var st = { created: !!cfg.repoExists, refSha: cfg.refExists ? 'head111' : null, pagesOn: !!cfg.pagesOn, blob: 0, commit: 0 };
+    var BASE = '/repos/tester/demo-app';
+
+    function res(status, data) {
+      return Promise.resolve({
+        ok: status >= 200 && status < 300,
+        status: status,
+        text: function () { return Promise.resolve(data ? JSON.stringify(data) : ''); }
+      });
+    }
+
+    win.fetch = function (url, opts) {
+      var method = (opts && opts.method) || 'GET';
+      var path = new URL(String(url), win.location.href).pathname;
+      var body = opts && opts.body ? JSON.parse(opts.body) : null;
+      reqs.push({ method: method, path: path, body: body });
+
+      if (path === '/user' && method === 'GET') return res(200, { login: 'tester' });
+      if (path === '/user/repos' && method === 'POST') { st.created = true; return res(201, { full_name: 'tester/demo-app', size: 0 }); }
+      if (path === BASE && method === 'GET') {
+        return st.created ? res(200, { full_name: 'tester/demo-app', size: cfg.repoExists ? 1200 : 0, default_branch: 'main' })
+                          : res(404, { message: 'Not Found' });
+      }
+      if (path === BASE + '/git/ref/heads/main' && method === 'GET') {
+        return st.refSha ? res(200, { object: { sha: st.refSha } }) : res(404, { message: 'Not Found' });
+      }
+      if (path === BASE + '/git/commits/head111' && method === 'GET') return res(200, { sha: 'head111', tree: { sha: 'basetree' } });
+      if (path === BASE + '/git/blobs' && method === 'POST') { st.blob++; return res(201, { sha: 'blob-' + st.blob }); }
+      if (path === BASE + '/git/trees' && method === 'POST') return res(201, { sha: 'tree-' + (st.blob) });
+      if (path === BASE + '/git/commits' && method === 'POST') { st.commit++; return res(201, { sha: 'commit-' + st.commit }); }
+      if (path === BASE + '/git/refs' && method === 'POST') { st.refSha = body.sha; return res(201, {}); }
+      if (path === BASE + '/git/refs/heads/main' && method === 'PATCH') { st.refSha = body.sha; return res(200, {}); }
+      if (path === BASE + '/pages' && method === 'GET') {
+        return st.pagesOn ? res(200, { html_url: 'https://tester.github.io/demo-app/' }) : res(404, { message: 'Not Found' });
+      }
+      if (path === BASE + '/pages' && method === 'POST') { st.pagesOn = true; return res(201, { html_url: 'https://tester.github.io/demo-app/' }); }
+      if (path === BASE + '/pages/builds/latest') return res(200, { status: 'built' });
+      return res(500, { message: '意外的请求 ' + method + ' ' + path });
+    };
+
+    return { reqs: reqs, state: st };
+  }
+
+  /* ==================== UI 操作 ==================== */
+  function fillForm(win, doc, repo) {
+    var token = doc.getElementById('token');
+    token.value = 'ghp_fake_token_for_test';
+    token.dispatchEvent(new win.Event('change'));
+    doc.getElementById('owner').value = 'tester';
+    doc.getElementById('repo').value = repo;
+    doc.getElementById('enablePages').checked = true;
+  }
+
+  function pickFiles(win, doc, files) {
+    var dt = new DataTransfer();
+    files.forEach(function (f) { dt.items.add(new win.File([f.content], f.name, { type: f.type || 'text/plain' })); });
+    var input = doc.getElementById('fileInput');
+    input.files = dt.files;
+    input.dispatchEvent(new win.Event('change'));
+    return waitFor(function () { return doc.getElementById('fileList').children.length === files.length; }, 4000, '文件识别');
+  }
+
+  function loadFrame(qs) {
+    return new Promise(function (resolve) {
+      frame.onload = function () { frame.onload = null; resolve(); };
+      frame.src = 'deploy.html?norestore=1' + (qs || '');
+    });
+  }
+
+  function findReq(reqs, method, path, after) {
+    for (var i = (after || 0); i < reqs.length; i++) {
+      if (reqs[i].method === method && reqs[i].path === path) return i;
+    }
+    return -1;
+  }
+
+  /* ==================== 用例 1：首次部署（空仓库） ==================== */
+  async function case1() {
+    info('用例 1：首次部署 → 空仓库，需建仓、建分支、开 Pages');
+    var win = frame.contentWindow, doc = frame.contentDocument;
+    var api = installFake(win, { repoExists: false, refExists: false });
+
+    fillForm(win, doc, 'demo-app');
+    await pickFiles(win, doc, [
+      { name: 'index.html', content: '<!doctype html><meta charset="utf-8"><h1>demo</h1>', type: 'text/html' },
+      { name: 'assets/app.css', content: 'body{margin:0}', type: 'text/css' }
+    ]);
+    out(true, '文件选择：2 个文件识别成功（index.html / assets/app.css）');
+    out(!/缺少入口/.test(doc.getElementById('fileSummary').textContent), '入口检查：识别到根目录 index.html');
+
+    doc.getElementById('btnDeploy').click();
+    await waitFor(function () { return doc.getElementById('result').classList.contains('show'); }, 20000, '部署完成');
+    out(true, '流程跑通，结果面板已显示');
+
+    var logText = doc.getElementById('log').textContent;
+    out(/部署完成/.test(logText), '日志包含「部署完成」');
+    out(/空仓库/.test(logText), '日志识别出空仓库场景');
+
+    var url = doc.getElementById('resultUrl').textContent;
+    out(url === 'https://tester.github.io/demo-app/', '输出 Pages 地址：' + url);
+
+    var r = api.reqs;
+    var iCm = findReq(r, 'POST', '/repos/tester/demo-app/git/commits');
+    var iRef = findReq(r, 'POST', '/repos/tester/demo-app/git/refs');
+    var iPg = findReq(r, 'POST', '/repos/tester/demo-app/pages');
+    out(findReq(r, 'POST', '/user/repos') > -1, '仓库不存在时调用了建仓接口');
+    out(iCm > -1 && iRef > iCm && iPg > iRef, '顺序正确：commit → 建 ref → 开 Pages');
+    out(r.filter(function (x) { return x.path === '/repos/tester/demo-app/git/blobs'; }).length === 2, '每个文件各建一个 blob（2 个）');
+    out(r.some(function (x) { return x.path === '/repos/tester/demo-app/pages/builds/latest'; }), '轮询了 Pages 构建状态');
+
+    var treeReq = r.filter(function (x) { return x.path === '/repos/tester/demo-app/git/trees'; })[0];
+    out(treeReq && treeReq.body && !treeReq.body.base_tree, '空仓库的 tree 不带 base_tree');
+
+    var recs = win.WSStore.list();
+    out(recs.length === 1 && recs[0].demo === url, '本机作品记录写入且地址一致');
+    out(recs.length === 1 && recs[0].repo === 'https://github.com/tester/demo-app', '记录包含仓库地址');
+
+    win.WSStore.clear();
+    try { win.sessionStorage.removeItem('ws.gh_token'); } catch (e) {}
+    out(true, '清理自测产生的本地记录与令牌');
+  }
+
+  /* ==================== 用例 2：增量部署（已有分支） ==================== */
+  async function case2() {
+    info('用例 2：增量部署 → 仓库已存在，应在原分支上追加提交');
+    await loadFrame('&case=2');
+    var win = frame.contentWindow, doc = frame.contentDocument;
+    var api = installFake(win, { repoExists: true, refExists: true, pagesOn: true });
+
+    fillForm(win, doc, 'demo-app');
+    await pickFiles(win, doc, [
+      { name: 'index.html', content: '<!doctype html><h1>v2</h1>', type: 'text/html' }
+    ]);
+
+    doc.getElementById('btnDeploy').click();
+    await waitFor(function () { return doc.getElementById('result').classList.contains('show'); }, 20000, '部署完成');
+
+    var r = api.reqs;
+    var logText = doc.getElementById('log').textContent;
+    out(/增量提交/.test(logText), '日志说明是基于现有 head 的增量提交');
+    out(findReq(r, 'POST', '/user/repos') === -1, '未重复建仓');
+    out(findReq(r, 'GET', '/repos/tester/demo-app/git/commits/head111') > -1, '读取了当前 head 的 tree');
+    out(findReq(r, 'PATCH', '/repos/tester/demo-app/git/refs/heads/main') > -1, '用 PATCH 移动已有分支');
+
+    var treeReq = r.filter(function (x) { return x.path === '/repos/tester/demo-app/git/trees'; })[0];
+    out(treeReq && treeReq.body && treeReq.body.base_tree === 'basetree', '增量 tree 带上了 base_tree（保留仓库已有文件）');
+
+    var commitReq = r.filter(function (x) { return x.path === '/repos/tester/demo-app/git/commits' && x.method === 'POST'; })[0];
+    out(commitReq && commitReq.body.parents[0] === 'head111', 'commit 的 parent 指向原 head（可回滚）');
+
+    var pagesGet = r.some(function (x) { return x.path === '/repos/tester/demo-app/pages' && x.method === 'GET'; });
+    out(pagesGet && findReq(r, 'POST', '/repos/tester/demo-app/pages') === -1, 'Pages 已开启时不重复创建');
+
+    win.WSStore.clear();
+  }
+
+  /* ==================== 主流程 ==================== */
+  async function run() {
+    lines = []; TOTAL = 0; FAILED = 0;
+    reportEl.textContent = '';
+
+    await loadFrame('&case=1');
+    await case1();
+    await case2();
+
+    info(FAILED === 0
+      ? '全部通过（' + TOTAL + ' 项断言）'
+      : FAILED + ' / ' + TOTAL + ' 项失败');
+    reportEl.setAttribute('data-result', FAILED === 0 ? 'pass' : 'fail');
+  }
+
+  function start() {
+    run().catch(function (e) {
+      out(false, '流程异常：' + e.message);
+      reportEl.setAttribute('data-result', 'fail');
+    });
+  }
+
+  document.getElementById('run').addEventListener('click', function () { location.reload(); });
+
+  if (document.readyState === 'complete') setTimeout(start, 200);
+  else window.addEventListener('load', function () { setTimeout(start, 200); });
+})();
+</script>
+</body>
+</html>
