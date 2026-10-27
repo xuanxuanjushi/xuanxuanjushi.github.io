@@ -43,6 +43,7 @@
     id: 'M3 6h18v12H3zM7.5 10h2.6v4H7.5zM13 10h4.8M13 13.4h4.8',
     note: 'M6 3.5h7.5L18 8v12.5H6zM13.5 3.5V8H18M9 12.5h6M9 16h4',
     wechat: 'M4 7A3 3 0 0 1 7 4h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H10l-4 3v-3.2A3 3 0 0 1 4 13z',
+    douyin: 'M9.2 18.6a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8zM11.6 16.2V4.4c.9 1.6 2.4 2.6 4.6 2.8',
     package: 'M4 7.5 12 3l8 4.5v9L12 21l-8-4.5zM8 5.2v9.4M16 5.2v9.4',
     link: 'M10.5 13.5a4 4 0 0 0 5.7 0l2-2a4 4 0 0 0-5.7-5.7l-1.2 1.2M13.5 10.5a4 4 0 0 0-5.7 0l-2 2a4 4 0 0 0 5.7 5.7l1.2-1.2',
     back: 'M15 5l-7 7 7 7',
@@ -354,9 +355,10 @@
       rows.push('<button class="contact-row" type="button" data-copy="' + esc(c.wechatId) + '">' +
         icon('wechat') + '<span>微信 ' + esc(c.wechatId) + '</span></button>');
     }
-    if (c.github) {
-      rows.push('<a class="contact-row" href="https://github.com/' + esc(c.github) + '" target="_blank" rel="noopener">' +
-        icon('github') + '<span>@' + esc(c.github) + '</span></a>');
+    if (c.douyin) {
+      // 抖音号按文本复制，不做跳转（抖音主页地址依赖 sec_uid，用 ID 拼链接会失效）
+      rows.push('<button class="contact-row" type="button" data-copy="' + esc(c.douyin) + '">' +
+        icon('douyin') + '<span>抖音 ' + esc(c.douyin) + '</span></button>');
     }
 
     var qr = c.wechatQr

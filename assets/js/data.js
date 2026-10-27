@@ -27,7 +27,8 @@ window.SITE_DATA = {
       wechatQr: 'assets/img/wechat-qr.png',              // 二维码图：换成微信「我的二维码」截图即可
       wechatLabel: '微信扫码',
       email: '',                                         // 填了就出现邮箱入口
-      github: 'xuanxuanjushi'
+      douyin: 'qinliyu',                                 // 抖音号（页脚展示，点击复制）
+      github: 'xuanxuanjushi'                            // 仍保留，页面未展示
     },
 
     /* 下载链接的兜底值：资源自身的 download 为空时才用它（可放网盘、GitHub Release、CDN 等任意地址） */
