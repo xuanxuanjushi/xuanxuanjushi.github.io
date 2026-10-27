@@ -10,10 +10,11 @@
 ```
 Web station/
 ├─ index.html              ★ 资源列表页（顶栏 + 侧栏 + 瀑布流网格）
-├─ detail.html             资源详情页（预览 / 购买卡 / 四个 Tab / 同类推荐）
+├─ detail.html             资源详情页（预览 / 下载卡 / 四个 Tab / 同类推荐）
+├─ about.html              个人简介（简历数据驱动：时间线 / 教育 / 技能 / 荣誉）
+├─ works.html              我的作品集（image / video / link / pdf 四种媒介 + 灯箱）
 ├─ admin/
 │  └─ upload.html          上传资源（P1：只存本机草稿，不落库）
-├─ works.html              旧首页：个人作品集（沿用 style.css）
 ├─ deploy.html             发布中心（GitHub 部署面板）
 ├─ test.html               发布流程自测（假 GitHub API 驱动真实 UI）
 ├─ start.bat               Windows 一键本地预览（127.0.0.1:5173）
@@ -21,13 +22,16 @@ Web station/
 │  ├─ css/
 │  │  ├─ site.css          ★ 资源站样式（外壳 / 列表 / 详情 / 后台）
 │  │  └─ style.css         作品集样式（works.html 专用，两者互不影响）
-│  ├─ img/covers/          占位封面（p01–p18，见下方版权说明）
+│  ├─ img/covers/          占位封面（p01–p19，见下方版权说明）
+│  ├─ img/works/           作品集图片（从作品集 PDF 提取，w01–w12）
 │  └─ js/
 │     ├─ data.js           ★ 资源站数据：站点信息 / 导航 / 分类 / 18 件资源
 │     ├─ app.js            公共层：图标、主题、侧栏、卡片渲染、收藏、Toast
 │     ├─ list.js           列表页：筛选 / 搜索 / 排序 / 加载更多
 │     ├─ detail.js         详情页渲染
 │     ├─ upload.js         上传页交互（本地草稿）
+│     ├─ about.js          个人简介渲染
+│     ├─ works.js          作品集渲染与灯箱
 │     ├─ config.js         作品集配置（站点名、个人信息、手写作品）
 │     ├─ store.js          部署记录的 localStorage 读写
 │     ├─ site.js           作品集渲染
@@ -78,6 +82,25 @@ contact: {
 
 每个页面都有：**图标式返回**（从站内点进来的走 `history.back()`，直接打开的回逻辑父级）+ **面包屑**（知道自己在哪）+ **回到顶部**（滚动 360px 后出现）。
 首页是站点根，没有来路时整条定位条不显示，避免出现只有「首页」的空条。
+
+### 个人简介与作品集
+
+`about.html` 全部由 `data.js` 的 `about` 渲染（内容取自简历）：首屏身份 + 工作/校园时间线 + 教育 + 侧栏基本信息/技能/证书。
+改简历只需改数据，不动结构。
+
+`works.html` 支持四种媒介，靠 `type` 决定打开方式：
+
+```js
+{ id: 'w01', title: '…', type: 'image', cover: 'assets/img/works/w02.jpg',
+  gallery: ['assets/img/works/w02.jpg'], desc: '…', tags: ['电商详情'], year: '2025' }
+
+type: 'image'  → 灯箱浏览 gallery（多图可左右翻）
+type: 'video'  → video 字段填 mp4 直链则内嵌播放，填外链则跳转
+type: 'link'   → 新窗口打开 href
+type: 'pdf'    → 新窗口打开
+```
+
+现有 10 件作品图片由 `assets/img/works/` 提供，来自作品集 PDF 的图片提取（`.workbuddy/tmp` 下未保留脚本，需要重跑见提交记录）。
 
 ### 「收藏网站」分类是链接区
 

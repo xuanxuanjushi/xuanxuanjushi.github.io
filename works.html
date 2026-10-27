@@ -3,116 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>我的作品集 · 覃露雨的闺房</title>
-<meta name="description" content="前端工程师 / 独立开发者的个人作品集，收录可在线访问的网页应用。">
-<link rel="stylesheet" href="assets/css/style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231f6f5c'/><circle cx='16' cy='16' r='5' fill='%23faf8f4'/></svg>">
+<title>我的作品集 · 覃露雨</title>
+<meta name="description" content="覃露雨的作品集：电商详情页、品牌标志、IP 形象、包装与装帧、摄影。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='16' fill='%23111213'/><circle cx='16' cy='16' r='9.8' stroke='%23e2ff1a' stroke-width='4.4' fill='none'/><path d='M20.1 20.1 22.79 22.79' stroke='%23e2ff1a' stroke-width='4.6' stroke-linecap='round'/></svg>">
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
 
-<header class="site-nav">
-  <div class="wrap">
-    <a class="brand" href="works.html">
-      <span class="brand-dot" aria-hidden="true"></span>
-      <span data-bind="siteName">覃露雨的闺房</span>
-    </a>
-    <nav class="nav-links" aria-label="主导航">
-      <a href="#works">作品</a>
-      <a href="#about">关于</a>
-      <a href="#contact" class="keep">联系</a>
-      <a href="deploy.html" class="keep cta">发布中心</a>
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换深浅色" title="切换深浅色">◐</button>
-    </nav>
+<header class="topbar">
+  <button class="icon-btn" type="button" data-side-toggle aria-label="切换侧栏" title="切换侧栏">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <a class="logo" href="index.html">
+    <span class="logo-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="9.8" stroke="currentColor" stroke-width="4.4"/>
+        <path d="M20.1 20.1 22.79 22.79" stroke="currentColor" stroke-width="4.6" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <span class="logo-text" data-site-name>覃露雨的闺房</span>
+  </a>
+  <form class="search" data-search-form role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4.3-4.3"/></svg>
+    <input type="search" placeholder="搜索资源、工具、分类…" autocomplete="off" aria-label="搜索">
+    <kbd>/</kbd>
+  </form>
+  <div class="top-actions">
+    <a class="btn sm acid" href="#" data-need-login><span>会员中心</span></a>
+    <a class="btn sm ghost" href="#" data-need-login><span>登录 / 注册</span></a>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="切换深浅色" title="切换深浅色">◐</button>
   </div>
 </header>
 
-<main>
-  <!-- Hero -->
-  <section class="hero">
-    <div class="wrap">
-      <span class="eyebrow"><i aria-hidden="true"></i> Portfolio · <span data-bind="year">2026</span></span>
-      <h1>你好，我是 <em data-bind="name">覃露雨</em>。<br><span data-bind="tagline">把想法做成能用的网页。</span></h1>
-      <p class="lede" data-bind="intro"></p>
-      <div class="cta-row">
-        <a class="btn primary" href="#works">查看作品 <span aria-hidden="true">→</span></a>
-        <a class="btn" href="deploy.html">把作品发布上线</a>
-      </div>
-      <div class="hero-meta">
-        <span><b data-bind="role">前端工程师</b></span>
-        <span data-bind="location">中国 · 杭州</span>
-        <span>已上线 <b id="liveCount">0</b> 个应用</span>
-        <span>作品共 <b id="totalCount">0</b> 个</span>
-      </div>
-    </div>
-  </section>
+<div class="subbar" data-subbar data-parent="index.html">
+  <button class="back-btn" type="button" data-back></button>
+  <nav class="crumb" data-crumb aria-label="当前位置"></nav>
+</div>
 
-  <!-- 作品 -->
-  <section class="section" id="works">
-    <div class="wrap">
-      <div class="section-head">
+<div class="shell">
+  <aside class="sidebar" aria-label="侧栏导航">
+    <div class="side-inner" data-sidebar></div>
+  </aside>
+
+  <main class="content">
+    <div class="content-inner">
+
+      <div class="page-head">
         <div>
-          <span class="mono">Selected work</span>
-          <h2>作品集</h2>
+          <h1>我的作品集</h1>
+          <p class="sub" id="worksSub">电商视觉、品牌与印刷、摄影，点开看大图</p>
         </div>
-        <p>从发布中心部署成功的应用会自动出现在这里，并带上仓库与在线地址。</p>
+        <div class="head-tools">
+          <a class="btn sm ghost" href="about.html">个人简介</a>
+        </div>
       </div>
-      <div class="grid" id="workGrid" aria-live="polite"></div>
+
+      <div class="chips" id="worksChips" role="group" aria-label="按媒介筛选"></div>
+
+      <div class="works-grid" id="worksGrid"></div>
+
+      <footer class="site-foot" data-foot></footer>
     </div>
-  </section>
+  </main>
+</div>
 
-  <!-- 关于 -->
-  <section class="section" id="about">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <span class="mono">About</span>
-          <h2>关于我</h2>
-        </div>
-      </div>
-      <div class="about-grid">
-        <div class="prose">
-          <p>我关注的是「交付」而不只是「实现」：一个东西能被别人接手、能被回滚、能被验证，才算做完。</p>
-          <p>日常在浏览器里做界面与交互，也写服务端和数据管道。喜欢先想清楚数据怎么流、模块边界在哪，再动手写第一行代码。</p>
-          <p>这个站点本身也是一个作品：没有框架、没有构建步骤，一个 HTML 文件夹，扔到 GitHub Pages 就能跑。</p>
-          <div class="contact-row">
-            <a class="btn sm" data-bind-href="mailto" data-bind-text="email" href="#">发邮件</a>
-            <a class="btn sm" data-bind-href="github" data-bind-text="githubLabel" href="#" target="_blank" rel="noopener">GitHub</a>
-            <a class="btn sm" href="deploy.html">发布中心 →</a>
-          </div>
-        </div>
-        <div id="skillList"></div>
-      </div>
-    </div>
-  </section>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="作品大图" hidden>
+  <button class="lb-close" type="button" id="lbClose" aria-label="关闭">×</button>
+  <button class="lb-nav prev" type="button" id="lbPrev" aria-label="上一张">‹</button>
+  <figure class="lb-figure">
+    <div class="lb-stage" id="lbStage"></div>
+    <figcaption class="lb-cap">
+      <span class="lb-title" id="lbTitle"></span>
+      <span class="lb-meta" id="lbMeta"></span>
+    </figcaption>
+  </figure>
+  <button class="lb-nav next" type="button" id="lbNext" aria-label="下一张">›</button>
+</div>
 
-  <!-- 联系 -->
-  <section class="section" id="contact">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <span class="mono">Contact</span>
-          <h2>聊聊？</h2>
-        </div>
-        <p>有新项目、合作，或者只是想讨论某段实现，都可以直接发邮件。</p>
-      </div>
-      <div class="cta-row" style="margin-top:0">
-        <a class="btn accent" data-bind-href="mailto" data-bind-text="email" href="#">发邮件</a>
-        <a class="btn" data-bind-href="github" data-bind-text="githubLabel" href="#" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer class="site-footer">
-  <div class="wrap">
-    <span>© <span data-bind="year">2026</span> <span data-bind="siteName">覃露雨的闺房</span></span>
-    <span class="mono">Hand-written HTML · No build step</span>
-    <a href="deploy.html" style="margin-left:auto">发布中心</a>
-  </div>
-</footer>
-
-<script src="assets/js/config.js"></script>
-<script src="assets/js/store.js"></script>
-<script src="assets/js/site.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/works.js"></script>
 </body>
 </html>

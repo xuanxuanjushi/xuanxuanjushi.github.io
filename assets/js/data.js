@@ -58,6 +58,7 @@ window.SITE_DATA = {
     {
       title: '我的',
       items: [
+        { label: '个人简介', icon: 'id', href: 'about.html' },
         { label: '上传资源', icon: 'upload', href: 'admin/upload.html' },
         { label: '我的作品集', icon: 'folder', href: 'works.html' },
         { label: '发布中心', icon: 'rocket', href: 'deploy.html' }
@@ -75,6 +76,129 @@ window.SITE_DATA = {
     { id: 'post', name: '海报与模板' },
     { id: 'sites', name: '收藏网站' },
     { id: 'study', name: '学习资料' }
+  ],
+
+  /* ---------- 个人简介（内容取自个人简历 PDF） ---------- */
+  about: {
+    name: '覃露雨',
+    enName: 'QIN LUYU',
+    title: '高级设计师',
+    company: '深圳市智领未来电子科技有限公司',
+    intro: '视觉传达设计本科毕业。做过品牌视觉全流程：从服饰、广告物料到电商详情页，能把需求翻译成可落地的平面方案，也用过 AE / PR 做动态表达。相信电商视觉要靠持续迭代，愿意在项目里把每一个细节磨到可交付。',
+    tags: ['电商视觉', '品牌物料', '详情页设计', '动态表达', '摄影'],
+    facts: [
+      { k: '现居', v: '深圳' },
+      { k: '学历', v: '本科 · 视觉传达设计' },
+      { k: '经验', v: '1 年（含实习）' },
+      { k: '方向', v: '电商美工 / 品牌视觉' }
+    ],
+    education: {
+      school: '广西民族大学相思湖学院',
+      major: '视觉传达设计 · 本科',
+      period: '2021.09 — 2025.06',
+      courses: '字体设计 / 图形设计 / VI 设计 / IP 形象设计 / LOGO 设计 / 书籍装帧 / 包装设计 / 版式设计 / 交互设计 / 海报设计'
+    },
+    experience: [
+      {
+        period: '2025 — 至今',
+        company: '深圳市智领未来电子科技有限公司',
+        role: '高级设计师',
+        points: [
+          '负责品牌视觉与电商物料的设计输出，覆盖详情页、主图、活动页。',
+          '与运营、产品对齐卖点优先级，把「先看什么、再看什么」落成版面结构。'
+        ]
+      },
+      {
+        period: '2024.12 — 2025.06',
+        company: '兴趣岛信息科技有限公司',
+        role: '平面美工设计师',
+        points: [
+          '聚焦产品详情页设计，按电商消费心理排布信息层级，输出契合产品特性的平面方案。',
+          '承担线下实体物料排版，覆盖品牌运营与推广场景，统一视觉风格强化品牌触点。'
+        ]
+      },
+      {
+        period: '2024.06 — 2024.09',
+        company: '平南卓动运动服饰',
+        role: '电商设计师',
+        points: [
+          '主导定制球服设计排版，把创意图案转化为可落地生产的视觉元素。',
+          '搭建运动服饰电商视觉规范，优化头图与详情页架构，沉淀设计模板与素材库。'
+        ]
+      },
+      {
+        period: '2024.01 — 2024.03',
+        company: '林丰广告装饰公司',
+        role: '广告设计师',
+        points: [
+          '负责门头、喷绘布、标识、名片等广告物料的排版设计，从品牌获客角度提炼诉求。',
+          '兼顾打印资料等事务，多任务并行推进设计与客户服务。'
+        ]
+      }
+    ],
+    campus: {
+      period: '2021.10 — 2023.10',
+      org: '新媒体中心',
+      role: '设计兼摄影负责人',
+      points: [
+        '参与校园微电影项目，跟进拍摄与剪辑全流程，积累视频策划与后期经验。',
+        '为赛事与公益组织设计海报与场景，实践品牌化宣传逻辑。'
+      ]
+    },
+    skills: [
+      { group: '平面与排版', tier: '熟练', items: ['Photoshop', 'Illustrator', 'CorelDRAW', 'InDesign'] },
+      { group: '动态与后期', tier: '掌握', items: ['After Effects', 'Premiere', '剪映'] },
+      { group: '三维与原型', tier: '了解', items: ['KeyShot', 'Dimension', 'Rhino', 'Axure'] },
+      { group: '办公', tier: '熟练', items: ['Word', 'Excel', 'PowerPoint'] }
+    ],
+    awards: [
+      '普通话二级甲等',
+      '计算机 WPS 一级证书',
+      '高等学校英语应用能力 B 级',
+      'C1 / D 驾驶证',
+      '校园微电影大赛入围奖',
+      '新媒体工作人员优秀奖',
+      '班级优秀班干部'
+    ]
+  },
+
+  /* ---------- 我的作品集（支持 image / video / link / pdf 四种媒介） ----------
+   * type: 'image' 用 gallery 走灯箱；'video' 填 video（mp4 直链或 b 站/YouTube 嵌入地址）；
+   *       'link' 外链跳转；'pdf' 打开 PDF。cover 必填，其余按类型派生。
+   */
+  works: [
+    { id: 'w01', title: 'QIANKU 洁面美容仪', type: 'image', year: '2025',
+      desc: '电商主图与详情页：把「85% OFF」做成视觉锚点，产品置于柔光台面，突出机身质感。',
+      tags: ['电商详情', '主图'], cover: 'assets/img/works/w02.jpg', gallery: ['assets/img/works/w02.jpg'] },
+    { id: 'w02', title: '护肤精华 · 详情页', type: 'image', year: '2025',
+      desc: '清透绿色调强调「修护」的天然感，信息按痛点—成分—用法三段推进。',
+      tags: ['详情页', '护肤'], cover: 'assets/img/works/w03.jpg', gallery: ['assets/img/works/w03.jpg'] },
+    { id: 'w03', title: '耳机活动 Banner', type: 'image', year: '2024',
+      desc: '橙白撞色做促销节奏，主体居中留出安全区，适配多尺寸投放。',
+      tags: ['Banner', '3C'], cover: 'assets/img/works/w04.jpg', gallery: ['assets/img/works/w04.jpg'] },
+    { id: 'w04', title: '护肤系列 · 长图详情', type: 'image', year: '2025',
+      desc: '长图详情的节奏控制：一屏一个信息点，色块分隔替代分割线。',
+      tags: ['长图', '排版'], cover: 'assets/img/works/w05.jpg', gallery: ['assets/img/works/w05.jpg'] },
+    { id: 'w05', title: '咖啡机 · 品牌详情', type: 'image', year: '2024',
+      desc: '深色底 + 金属高光，用产品局部特写建立「精密」的印象。',
+      tags: ['品牌详情', '家电'], cover: 'assets/img/works/w06.jpg', gallery: ['assets/img/works/w06.jpg'] },
+    { id: 'w06', title: '品牌标志合集', type: 'image', year: '2024',
+      desc: '9 组标志的结构练习：几何化、负空间、中英文字标的搭配与栅格对齐。',
+      tags: ['LOGO', '品牌'], cover: 'assets/img/works/w07.jpg',
+      gallery: ['assets/img/works/w07.jpg', 'assets/img/works/w08.jpg'] },
+    { id: 'w07', title: 'IP 形象设计', type: 'image', year: '2024',
+      desc: '一个角色的三视图与表情延展，保证不同角度下特征可识别。',
+      tags: ['IP 形象', '插画'], cover: 'assets/img/works/w09.jpg', gallery: ['assets/img/works/w09.jpg'] },
+    { id: 'w08', title: '包装设计', type: 'image', year: '2024',
+      desc: '成套包装的结构与展开面设计，统一色系区分口味。',
+      tags: ['包装', '印刷'], cover: 'assets/img/works/w11.jpg', gallery: ['assets/img/works/w11.jpg'] },
+    { id: 'w09', title: '书籍装帧与画册', type: 'image', year: '2024',
+      desc: '《川西之旅》旅行画册：封面主图 + 内页留白节奏，附书签设计。',
+      tags: ['装帧', '画册'], cover: 'assets/img/works/w12.jpg',
+      gallery: ['assets/img/works/w12.jpg', 'assets/img/works/w10.jpg'] },
+    { id: 'w10', title: '人像摄影', type: 'image', year: '2023',
+      desc: '逆光环境下的肤色还原与高光控制，用于活动宣传与个人作品。',
+      tags: ['摄影', '后期'], cover: 'assets/img/works/w01.jpg', gallery: ['assets/img/works/w01.jpg'] }
   ],
 
   /* 「收藏网站」分类：链接收藏，渲染成站点卡（图标 + 名称 + 介绍 + 域名）
