@@ -27,6 +27,8 @@
     var photo = portrait
       ? '<figure class="portrait">' +
           '<img src="' + App.esc(portrait) + '" alt="' + App.esc(A.name) + ' 的肖像照">' +
+          '<i class="crop crop-tl" aria-hidden="true"></i>' +
+          '<i class="crop crop-br" aria-hidden="true"></i>' +
           '<figcaption>Portrait · ' + App.esc(A.enName || '') + '</figcaption>' +
         '</figure>'
       : '<figure class="portrait is-empty"><span>' + App.esc(initials(A.name)) + '</span></figure>';
@@ -35,6 +37,12 @@
       return '<div class="stat"><b>' + App.esc(st.n) + '<em>' + App.esc(st.unit || '') + '</em></b>' +
         '<span>' + App.esc(st.label) + '</span></div>';
     }).join('');
+
+    if (stats) {
+      // 表头把整条的宽度用起来，避免四个数字之间只剩空白
+      stats = '<div class="stats-head"><span>Overview</span><span>更新 ' +
+        App.esc(String((A.updated || '2026.10')).replace('-', '.')) + '</span></div>' + stats;
+    }
 
     el.hero.innerHTML =
       photo +
@@ -85,17 +93,17 @@
   function renderMain() {
     el.main.innerHTML =
       '<section class="panel">' +
-        '<div class="panel-head"><h2>工作经历</h2><span class="tip">' + (A.experience || []).length + ' 段</span></div>' +
+        '<div class="panel-head"><em class="idx">01</em><h2>工作经历</h2><span class="tip">' + (A.experience || []).length + ' 段</span></div>' +
         '<div class="panel-body">' + timelineHtml(A.experience, 'work') + '</div>' +
       '</section>' +
 
       '<section class="panel">' +
-        '<div class="panel-head"><h2>校园经历</h2></div>' +
+        '<div class="panel-head"><em class="idx">02</em><h2>校园经历</h2></div>' +
         '<div class="panel-body">' + timelineHtml([A.campus], 'campus') + '</div>' +
       '</section>' +
 
       '<section class="panel">' +
-        '<div class="panel-head"><h2>教育背景</h2></div>' +
+        '<div class="panel-head"><em class="idx">03</em><h2>教育背景</h2></div>' +
         '<div class="panel-body">' +
           '<div class="edu">' +
             '<div class="edu-main">' +
@@ -130,17 +138,17 @@
 
     el.side.innerHTML =
       '<section class="panel">' +
-        '<div class="panel-head"><h2>基本信息</h2></div>' +
+        '<div class="panel-head"><em class="idx">A</em><h2>基本信息</h2></div>' +
         '<div class="panel-body"><div class="facts">' + facts + '</div></div>' +
       '</section>' +
 
       '<section class="panel">' +
-        '<div class="panel-head"><h2>技能</h2><span class="tip">软件与工具</span></div>' +
+        '<div class="panel-head"><em class="idx">B</em><h2>技能</h2><span class="tip">软件与工具</span></div>' +
         '<div class="panel-body">' + skills + '</div>' +
       '</section>' +
 
       '<section class="panel">' +
-        '<div class="panel-head"><h2>证书与荣誉</h2></div>' +
+        '<div class="panel-head"><em class="idx">C</em><h2>证书与荣誉</h2></div>' +
         '<div class="panel-body"><ul class="award-list">' + awards + '</ul></div>' +
       '</section>' +
 

@@ -157,6 +157,7 @@ window.SITE_DATA = {
     name: '覃露雨',
     enName: 'QIN LUYU',
     portrait: 'assets/img/portrait.jpg',   // 简介页首屏竖幅肖像
+    updated: '2026-10',
     stats: [
       { n: '4', unit: '段', label: '实习与工作' },
       { n: '10', unit: '件', label: '作品收录' },
