@@ -34,7 +34,7 @@
   }
 
   function renderHead(p) {
-    document.title = p.title + ' · 覃露雨的闺房';
+    document.title = p.title + ' · 覃露雨的设计小院儿';
     el.title.textContent = p.title;
     el.subtitle.textContent = p.subtitle || '';
 
@@ -213,7 +213,7 @@
 
     // 带 ?id= 但查不到时不要静默回落到第一件，否则用户会以为点错了资源
     if (!p) {
-      document.title = '资源不存在 · 覃露雨的闺房';
+      document.title = '资源不存在 · 覃露雨的设计小院儿';
       el.title.textContent = '资源不存在';
       el.subtitle.textContent = '链接可能已失效或资源已下架。返回列表重新选择。';
       el.meta.innerHTML = '<span><a href="index.html" style="color:var(--accent-text)">← 返回全部资源</a></span>';

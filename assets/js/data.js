@@ -8,7 +8,7 @@
  */
 window.SITE_DATA = {
   site: {
-    name: '覃露雨的闺房',
+    name: '覃露雨的设计小院儿',
     owner: '覃露雨',
     tagline: '设计资产 · AI 工具 · 学习资料',
     vip: false,
