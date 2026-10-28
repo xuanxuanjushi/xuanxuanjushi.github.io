@@ -27,7 +27,7 @@ window.SITE_DATA = {
       wechatQr: 'assets/img/wechat-qr.png',              // 微信「我的二维码」（400×400）
       wechatLabel: '微信扫码',
       email: '',                                         // 填了就出现邮箱入口
-      douyin: 'qinliyu',                                 // 抖音号（页脚展示，点击复制）
+      douyin: 'qinluyu',                                 // 抖音号（页脚展示，点击复制）
       github: 'xuanxuanjushi'                            // 仍保留，页面未展示
     },
 
