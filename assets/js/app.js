@@ -363,12 +363,14 @@
 
     var qr = c.wechatQr
       ? // 俏皮提示：一句口语 + 手绘箭头指向二维码，替代原来的「微信扫码」小字
-        // 气泡对话框 + 指向二维码的小尾巴 + 两颗闪点，语气像女生发消息
-        '<span class="qr-hint">我好看，扫我' +
-          '<svg class="qr-spark s1" viewBox="0 0 12 12" aria-hidden="true">' +
-            '<path d="M6 .8 7.1 4.9 11.2 6 7.1 7.1 6 11.2 4.9 7.1.8 6 4.9 4.9z" fill="currentColor"/></svg>' +
-          '<svg class="qr-spark s2" viewBox="0 0 12 12" aria-hidden="true">' +
-            '<path d="M6 .8 7.1 4.9 11.2 6 7.1 7.1 6 11.2 4.9 7.1.8 6 4.9 4.9z" fill="currentColor"/></svg>' +
+        // 一根小手指指着二维码，文字放在手势下方（不要气泡框）
+        '<span class="qr-hint">' +
+          '<svg class="qr-hand" viewBox="0 0 40 30" fill="none" aria-hidden="true">' +
+            '<rect x="4" y="7.5" width="17" height="16" rx="5.5" fill="currentColor"/>' +
+            '<rect x="12" y="9" width="24" height="7.4" rx="3.7" fill="currentColor"/>' +
+            '<path d="M11.6 17.4h6.4M11.6 20.4h6.4" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round"/>' +
+          '</svg>' +
+          '<span class="qr-hint-text">我好看，扫我</span>' +
         '</span>' +
         '<a class="qr-box" href="' + esc(pre + c.wechatQr) + '" target="_blank" rel="noopener" title="点击查看大图">' +
           '<img src="' + esc(pre + c.wechatQr) + '" alt="' + esc(c.wechatLabel || '微信二维码') + '"></a>' +
