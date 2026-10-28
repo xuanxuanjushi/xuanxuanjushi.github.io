@@ -362,9 +362,16 @@
     }
 
     var qr = c.wechatQr
-      ? '<a class="qr-box" href="' + esc(pre + c.wechatQr) + '" target="_blank" rel="noopener" title="点击查看大图">' +
+      ? // 俏皮提示：一句口语 + 手绘箭头指向二维码，替代原来的「微信扫码」小字
+        // 气泡对话框 + 指向二维码的小尾巴 + 两颗闪点，语气像女生发消息
+        '<span class="qr-hint">我好看，扫我' +
+          '<svg class="qr-spark s1" viewBox="0 0 12 12" aria-hidden="true">' +
+            '<path d="M6 .8 7.1 4.9 11.2 6 7.1 7.1 6 11.2 4.9 7.1.8 6 4.9 4.9z" fill="currentColor"/></svg>' +
+          '<svg class="qr-spark s2" viewBox="0 0 12 12" aria-hidden="true">' +
+            '<path d="M6 .8 7.1 4.9 11.2 6 7.1 7.1 6 11.2 4.9 7.1.8 6 4.9 4.9z" fill="currentColor"/></svg>' +
+        '</span>' +
+        '<a class="qr-box" href="' + esc(pre + c.wechatQr) + '" target="_blank" rel="noopener" title="点击查看大图">' +
           '<img src="' + esc(pre + c.wechatQr) + '" alt="' + esc(c.wechatLabel || '微信二维码') + '"></a>' +
-        '<span class="qr-label">' + esc(c.wechatLabel || '微信扫码') + '</span>' +
         // 手机端竖排会把二维码单独推到下一行、右边空着，这里补一段文字把整行填满
         '<div class="qr-text"><b>' + esc(c.wechatLabel || '微信扫码') + '添加</b>' +
           '<span>' + (c.wechatId ? '微信号 ' + esc(c.wechatId) : '点击二维码查看大图') + '</span></div>'
