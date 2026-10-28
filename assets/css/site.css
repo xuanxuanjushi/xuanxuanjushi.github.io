@@ -1191,19 +1191,20 @@ body.side-collapsed .side-inner { display: none; }
 .qr-box img { width: 84px; height: 84px; display: block; image-rendering: pixelated; }
 
 /* 俏皮提示：一根小手指向二维码，文字在手指下方，不加任何边框 */
-/* 文字保持水平（不旋转），手势在上方左右搓动，指向右侧二维码 */
+/* 文字保持水平（不旋转），手势在上方左右搓动，指向右侧二维码。
+   配色跟二维码统一走黑白灰：这里不用酸黄绿，否则饱和度压过二维码本身 */
 .qr-hint {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  color: var(--accent-text);
+  color: var(--muted);
 }
 
 .qr-hand {
-  width: 36px; height: 36px;
-  color: var(--accent);
-  filter: drop-shadow(0 0 6px rgba(226, 255, 26, .22));
+  width: 32px; height: 32px;
+  color: var(--ink-2);
+  opacity: .9;
   animation: qr-rub 1.7s ease-in-out infinite;
   will-change: transform;
 }
@@ -1225,7 +1226,8 @@ body.side-collapsed .side-inner { display: none; }
   .qr-hand { animation: none; }
 }
 
-.contact-qr:hover .qr-hand { animation-play-state: paused; transform: translateX(6px); }
+.contact-qr:hover .qr-hand { animation-play-state: paused; transform: translateX(6px); color: var(--accent-text); opacity: 1; }
+.contact-qr:hover .qr-hint { color: var(--ink-2); }
 
 
 /* 桌面端「微信号」已单独成行，这里不重复 */
@@ -2203,7 +2205,7 @@ body.side-collapsed .side-inner { display: none; }
     border-top: 1px dashed var(--line);
   }
   .qr-hint-text { font-size: .66rem; }
-  .qr-hand { width: 30px; height: 30px; }
+  .qr-hand { width: 28px; height: 28px; }
   .contact-qr .qr-box img { width: 64px; height: 64px; }
   .qr-text { display: block; min-width: 0; }
   .qr-text b { display: block; font-size: .78rem; font-weight: 600; color: var(--ink-2); }
