@@ -363,12 +363,13 @@
 
     var qr = c.wechatQr
       ? // 俏皮提示：一句口语 + 手绘箭头指向二维码，替代原来的「微信扫码」小字
-        // 一根小手指指着二维码，文字放在手势下方（不要气泡框）
+        // 细长手指指向二维码：按真实比例画（食指长≈掌宽，粗细≈掌高 1/3），补一小截手腕
         '<span class="qr-hint">' +
-          '<svg class="qr-hand" viewBox="0 0 40 30" fill="none" aria-hidden="true">' +
-            '<rect x="4" y="7.5" width="17" height="16" rx="5.5" fill="currentColor"/>' +
-            '<rect x="12" y="9" width="24" height="7.4" rx="3.7" fill="currentColor"/>' +
-            '<path d="M11.6 17.4h6.4M11.6 20.4h6.4" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round"/>' +
+          '<svg class="qr-hand" viewBox="0 0 44 28" fill="none" aria-hidden="true">' +
+            '<rect x="1.5" y="11.5" width="7" height="8.6" rx="3.4" fill="currentColor"/>' +
+            '<rect x="5.5" y="7.6" width="14" height="14.4" rx="6.2" fill="currentColor"/>' +
+            '<rect x="13.5" y="10.2" width="22.5" height="5" rx="2.5" fill="currentColor"/>' +
+            '<path d="M12.8 17.4h6.8M12.8 20.6h6.8" stroke="var(--bg)" stroke-width="1.3" stroke-linecap="round"/>' +
           '</svg>' +
           '<span class="qr-hint-text">我好看，扫我</span>' +
         '</span>' +
